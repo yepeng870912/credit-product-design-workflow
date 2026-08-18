@@ -1,0 +1,1309 @@
+{
+  "base": {
+    "status": "valid",
+    "input_snapshot": {
+      "metadata": {
+        "model_id": "demo-001",
+        "product_name": "示例经营贷",
+        "as_of_date": "2026-08-10",
+        "currency": "CNY",
+        "jurisdiction": "CN",
+        "stage": "feasibility"
+      },
+      "contract": {
+        "principal": 100000,
+        "term_months": 12,
+        "repayment_method": "annuity"
+      },
+      "pricing": {
+        "nominal_annual_rate": 0.12,
+        "upfront_fee_rate": 0.01,
+        "upfront_fee_fixed": 0,
+        "monthly_fee": 0,
+        "fee_financed": false
+      },
+      "risk": {
+        "cumulative_default_rate": 0.05,
+        "lgd": 0.65,
+        "recovery_lag_months": 0
+      },
+      "costs": {
+        "funding_annual_rate": 0.045,
+        "acquisition_cost": 800,
+        "origination_cost": 300,
+        "monthly_servicing_cost": 12,
+        "collection_cost_per_default": 300,
+        "tax_rate": 0.25
+      },
+      "capital": {
+        "economic_capital_rate": 0.08,
+        "hurdle_annual_rate": 0.12
+      },
+      "valuation": {
+        "discount_annual_rate": 0.1
+      },
+      "targets": {
+        "minimum_npv": 0,
+        "minimum_raroc": 0.12,
+        "maximum_apr": 0.18
+      },
+      "lineage": [
+        {
+          "path": "risk.cumulative_default_rate",
+          "source": "DEMO ONLY",
+          "as_of_date": "2026-08-10",
+          "owner": "demo",
+          "status": "assumed",
+          "confidence": "low",
+          "note": "示例值，不得用于决策"
+        }
+      ]
+    },
+    "conventions": {
+      "period": "monthly",
+      "timing": "origination at t0; other cash flows at period end",
+      "rounding": "full precision in JSON; presentation may round",
+      "apr": "indicative mathematical borrower IRR"
+    },
+    "metrics": {
+      "total_income": 7618.546414010051,
+      "expected_loss": 1806.2446774221778,
+      "funding_cost": 2481.9549052537695,
+      "operating_cost": 1244.0,
+      "collection_cost": 14.999999999999925,
+      "capital_charge": 529.483713120804,
+      "tax": 410.4657795533252,
+      "expected_profit": 1131.39733865998,
+      "npv": -3997.613309474924,
+      "lender_irr": 0.020697425589554452,
+      "indicative_borrower_apr": 0.14835555680556345,
+      "roi": 0.011302670715883917,
+      "average_economic_capital": 4412.3642760067005,
+      "raroc": 0.37641521594493493,
+      "break_even_cumulative_default_rate": null
+    },
+    "calculation_trace": [
+      {
+        "id": "F01",
+        "formula": "monthly_rate = nominal_annual_rate / 12",
+        "substitution": "0.12 / 12",
+        "result": 0.01,
+        "unit": "decimal/month"
+      },
+      {
+        "id": "F02",
+        "formula": "monthly_hazard = 1-(1-cumulative_default_rate)^(1/term_months)",
+        "substitution": "1-(1-0.05)^(1/12)",
+        "result": 0.004265318777560645,
+        "unit": "probability/month"
+      },
+      {
+        "id": "F03",
+        "formula": "upfront_fee = principal*upfront_fee_rate+upfront_fee_fixed",
+        "substitution": "100000.0*0.01+0",
+        "result": 1000.0,
+        "unit": "CNY"
+      },
+      {
+        "id": "F04",
+        "formula": "NPV = sum(lender_cashflow_t/(1+monthly_discount_rate)^t)",
+        "substitution": "monthly_discount_rate=0.007974140428903764; periods=0..12",
+        "result": -3997.613309474924,
+        "unit": "CNY"
+      },
+      {
+        "id": "F05",
+        "formula": "ROI = expected_profit/abs(initial_lender_outflow)",
+        "substitution": "1131.39733865998/abs(-100100.0)",
+        "result": 0.011302670715883917,
+        "unit": "decimal"
+      },
+      {
+        "id": "F06",
+        "formula": "RAROC = (risk_adjusted_profit*12/term_months)/average_economic_capital",
+        "substitution": "(1660.8810517807783*12/12)/4412.3642760067005",
+        "result": 0.37641521594493493,
+        "unit": "decimal/year"
+      }
+    ],
+    "cashflows": [
+      {
+        "month": 1,
+        "opening_balance": 100000.0,
+        "scheduled_payment": 8884.878867834166,
+        "principal": 7884.878867834166,
+        "interest": 1000.0,
+        "monthly_fee": 0,
+        "closing_balance": 92115.12113216583,
+        "survival_open": 1.0,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004265318777560645,
+        "expected_loss": 277.2457205414419,
+        "funding_cost": 375.0,
+        "servicing_cost": 12,
+        "collection_cost": 1.2795956332681935,
+        "economic_capital": 8000.0,
+        "capital_charge": 80.0,
+        "taxable_profit": 254.47468382528996,
+        "tax": 63.61867095632249,
+        "lender_cashflow": 8075.734880703134,
+        "borrower_cashflow": -8884.878867834166
+      },
+      {
+        "month": 2,
+        "opening_balance": 92115.12113216583,
+        "scheduled_payment": 8884.87886783417,
+        "principal": 7963.727656512511,
+        "interest": 921.1512113216584,
+        "monthly_fee": 0,
+        "closing_balance": 84151.39347565333,
+        "survival_open": 0.9957346812224394,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004247125833286434,
+        "expected_loss": 254.29593188787493,
+        "funding_cost": 345.43170424562186,
+        "servicing_cost": 12,
+        "collection_cost": 1.27413774998593,
+        "economic_capital": 7369.209690573267,
+        "capital_charge": 73.69209690573267,
+        "taxable_profit": 234.4573405324429,
+        "tax": 58.61433513311073,
+        "lender_cashflow": 8139.570661911844,
+        "borrower_cashflow": -8884.87886783417
+      },
+      {
+        "month": 3,
+        "opening_balance": 84151.39347565333,
+        "scheduled_payment": 8884.878867834172,
+        "principal": 8043.364933077638,
+        "interest": 841.5139347565333,
+        "monthly_fee": 0,
+        "closing_balance": 76108.02854257569,
+        "survival_open": 0.9914875553891529,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004229010487719054,
+        "expected_loss": 231.32013161706192,
+        "funding_cost": 315.56772553369996,
+        "servicing_cost": 12,
+        "collection_cost": 1.2687031463157161,
+        "economic_capital": 6732.111478052267,
+        "capital_charge": 67.32111478052266,
+        "taxable_profit": 214.03625967893302,
+        "tax": 53.509064919733255,
+        "lender_cashflow": 8203.892127836838,
+        "borrower_cashflow": -8884.878867834172
+      },
+      {
+        "month": 4,
+        "opening_balance": 76108.02854257569,
+        "scheduled_payment": 8884.878867834172,
+        "principal": 8123.798582408414,
+        "interest": 761.0802854257569,
+        "monthly_fee": 0,
+        "closing_balance": 67984.22996016727,
+        "survival_open": 0.9872585449014338,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004210972409875285,
+        "expected_loss": 208.3177254358115,
+        "funding_cost": 285.40510703465884,
+        "servicing_cost": 12,
+        "collection_cost": 1.2632917229625855,
+        "economic_capital": 6088.642283406055,
+        "capital_charge": 60.88642283406055,
+        "taxable_profit": 193.20773839826347,
+        "tax": 48.30193459956587,
+        "lender_cashflow": 8268.704386207113,
+        "borrower_cashflow": -8884.878867834172
+      },
+      {
+        "month": 5,
+        "opening_balance": 67984.22996016727,
+        "scheduled_payment": 8884.878867834159,
+        "principal": 8205.036568232486,
+        "interest": 679.8422996016727,
+        "monthly_fee": 0,
+        "closing_balance": 59779.19339193479,
+        "survival_open": 0.9830475724915585,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004193011270183654,
+        "expected_loss": 185.2881175715301,
+        "funding_cost": 254.94086235062727,
+        "servicing_cost": 12,
+        "collection_cost": 1.2579033810550961,
+        "economic_capital": 5438.738396813382,
+        "capital_charge": 54.38738396813381,
+        "taxable_profit": 171.96803233032645,
+        "tax": 42.99200808258161,
+        "lender_cashflow": 8334.012592480232,
+        "borrower_cashflow": -8884.878867834159
+      },
+      {
+        "month": 6,
+        "opening_balance": 59779.19339193479,
+        "scheduled_payment": 8884.878867834168,
+        "principal": 8287.08693391482,
+        "interest": 597.7919339193479,
+        "monthly_fee": 0,
+        "closing_balance": 51492.10645801997,
+        "survival_open": 0.9788545612213748,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004175126740478416,
+        "expected_loss": 162.23071075568342,
+        "funding_cost": 224.17197521975544,
+        "servicing_cost": 12,
+        "collection_cost": 1.2525380221435247,
+        "economic_capital": 4782.335471354783,
+        "capital_charge": 47.823354713547836,
+        "taxable_profit": 150.31335520821773,
+        "tax": 37.57833880205443,
+        "lender_cashflow": 8399.821950320984,
+        "borrower_cashflow": -8884.878867834168
+      },
+      {
+        "month": 7,
+        "opening_balance": 51492.10645801997,
+        "scheduled_payment": 8884.878867834157,
+        "principal": 8369.957803253958,
+        "interest": 514.9210645801996,
+        "monthly_fee": 0,
+        "closing_balance": 43122.14865476601,
+        "survival_open": 0.9746794344808964,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004157318493993558,
+        "expected_loss": 139.1449062071975,
+        "funding_cost": 193.09539921757488,
+        "servicing_cost": 12,
+        "collection_cost": 1.2471955481980674,
+        "economic_capital": 4119.368516641597,
+        "capital_charge": 41.19368516641597,
+        "taxable_profit": 128.23987844081321,
+        "tax": 32.059969610203304,
+        "lender_cashflow": 8466.137712084566,
+        "borrower_cashflow": -8884.878867834157
+      },
+      {
+        "month": 8,
+        "opening_balance": 43122.14865476601,
+        "scheduled_payment": 8884.878867834153,
+        "principal": 8453.657381286494,
+        "interest": 431.2214865476601,
+        "monthly_fee": 0,
+        "closing_balance": 34668.491273479514,
+        "survival_open": 0.9705221159869029,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004139586205356827,
+        "expected_loss": 116.03010361580029,
+        "funding_cost": 161.70805745537254,
+        "servicing_cost": 12,
+        "collection_cost": 1.241875861607048,
+        "economic_capital": 3449.771892381281,
+        "capital_charge": 34.497718923812805,
+        "taxable_profit": 105.74373069106744,
+        "tax": 26.43593267276686,
+        "lender_cashflow": 8532.965179304794,
+        "borrower_cashflow": -8884.878867834153
+      },
+      {
+        "month": 9,
+        "opening_balance": 34668.491273479514,
+        "scheduled_payment": 8884.878867834179,
+        "principal": 8538.193955099383,
+        "interest": 346.68491273479515,
+        "monthly_fee": 0,
+        "closing_balance": 26130.29731838013,
+        "survival_open": 0.966382529781546,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004121929550583788,
+        "expected_loss": 92.8857011253024,
+        "funding_cost": 130.00684227554817,
+        "servicing_cost": 12,
+        "collection_cost": 1.2365788651751364,
+        "economic_capital": 2773.479301878361,
+        "capital_charge": 27.73479301878361,
+        "taxable_profit": 82.82099744998584,
+        "tax": 20.70524936249646,
+        "lender_cashflow": 8600.309703186873,
+        "borrower_cashflow": -8884.878867834179
+      },
+      {
+        "month": 10,
+        "opening_balance": 26130.29731838013,
+        "scheduled_payment": 8884.87886783415,
+        "principal": 8623.575894650348,
+        "interest": 261.3029731838013,
+        "monthly_fee": 0,
+        "closing_balance": 17506.72142372978,
+        "survival_open": 0.9622606002309623,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.0041043482070719,
+        "expected_loss": 69.71109531681697,
+        "funding_cost": 97.98861494392548,
+        "servicing_cost": 12,
+        "collection_cost": 1.23130446212157,
+        "economic_capital": 2090.4237854704106,
+        "capital_charge": 20.904237854704103,
+        "taxable_profit": 59.4677206062332,
+        "tax": 14.8669301515583,
+        "lender_cashflow": 8668.176685105023,
+        "borrower_cashflow": -8884.87886783415
+      },
+      {
+        "month": 11,
+        "opening_balance": 17506.72142372978,
+        "scheduled_payment": 8884.8788678342,
+        "principal": 8709.811653596902,
+        "interest": 175.0672142372978,
+        "monthly_fee": 0,
+        "closing_balance": 8796.90977013288,
+        "survival_open": 0.9581562520238903,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004086841853594629,
+        "expected_loss": 46.505681191918406,
+        "funding_cost": 65.65020533898668,
+        "servicing_cost": 12,
+        "collection_cost": 1.2260525560783886,
+        "economic_capital": 1400.5377138983824,
+        "capital_charge": 14.005377138983825,
+        "taxable_profit": 35.679898011330515,
+        "tax": 8.919974502832629,
+        "lender_cashflow": 8736.5715771054,
+        "borrower_cashflow": -8884.8788678342
+      },
+      {
+        "month": 12,
+        "opening_balance": 8796.90977013288,
+        "scheduled_payment": 8884.878867834208,
+        "principal": 8796.90977013288,
+        "interest": 87.96909770132879,
+        "monthly_fee": 0,
+        "closing_balance": 0.0,
+        "survival_open": 0.9540694101702957,
+        "monthly_hazard": 0.004265318777560645,
+        "expected_default_probability": 0.004069410170295571,
+        "expected_loss": 23.268852155738287,
+        "funding_cost": 32.9884116379983,
+        "servicing_cost": 12,
+        "collection_cost": 1.2208230510886713,
+        "economic_capital": 703.7527816106303,
+        "capital_charge": 7.037527816106302,
+        "taxable_profit": 11.453483040397234,
+        "tax": 2.8633707600993086,
+        "lender_cashflow": 8805.499882413178,
+        "borrower_cashflow": -8884.878867834208
+      }
+    ],
+    "validation": {
+      "errors": [],
+      "warnings": [
+        {
+          "code": "APR_INDICATIVE",
+          "path": "metadata.jurisdiction",
+          "message": "borrower APR is mathematical IRR, not a confirmed regulatory disclosure rate"
+        }
+      ],
+      "reconciliation": [
+        {
+          "name": "ending_balance_zero",
+          "difference": 0.0,
+          "tolerance": 1e-08,
+          "passed": true
+        },
+        {
+          "name": "principal_rollforward",
+          "difference": 0.0,
+          "tolerance": 1e-08,
+          "passed": true
+        },
+        {
+          "name": "cashflow_identity",
+          "difference": -2.7284841053187847e-12,
+          "tolerance": 1e-08,
+          "passed": true
+        },
+        {
+          "name": "survival_to_cdr",
+          "difference": -6.938893903907228e-17,
+          "tolerance": 1e-10,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "downside",
+      "overrides": {
+        "risk.cumulative_default_rate": 0.08,
+        "costs.funding_annual_rate": 0.055
+      },
+      "result": {
+        "status": "valid",
+        "input_snapshot": {
+          "metadata": {
+            "model_id": "demo-001",
+            "product_name": "示例经营贷",
+            "as_of_date": "2026-08-10",
+            "currency": "CNY",
+            "jurisdiction": "CN",
+            "stage": "feasibility"
+          },
+          "contract": {
+            "principal": 100000,
+            "term_months": 12,
+            "repayment_method": "annuity"
+          },
+          "pricing": {
+            "nominal_annual_rate": 0.12,
+            "upfront_fee_rate": 0.01,
+            "upfront_fee_fixed": 0,
+            "monthly_fee": 0,
+            "fee_financed": false
+          },
+          "risk": {
+            "cumulative_default_rate": 0.08,
+            "lgd": 0.65,
+            "recovery_lag_months": 0
+          },
+          "costs": {
+            "funding_annual_rate": 0.055,
+            "acquisition_cost": 800,
+            "origination_cost": 300,
+            "monthly_servicing_cost": 12,
+            "collection_cost_per_default": 300,
+            "tax_rate": 0.25
+          },
+          "capital": {
+            "economic_capital_rate": 0.08,
+            "hurdle_annual_rate": 0.12
+          },
+          "valuation": {
+            "discount_annual_rate": 0.1
+          },
+          "targets": {
+            "minimum_npv": 0,
+            "minimum_raroc": 0.12,
+            "maximum_apr": 0.18
+          },
+          "lineage": [
+            {
+              "path": "risk.cumulative_default_rate",
+              "source": "DEMO ONLY",
+              "as_of_date": "2026-08-10",
+              "owner": "demo",
+              "status": "assumed",
+              "confidence": "low",
+              "note": "示例值，不得用于决策"
+            }
+          ]
+        },
+        "conventions": {
+          "period": "monthly",
+          "timing": "origination at t0; other cash flows at period end",
+          "rounding": "full precision in JSON; presentation may round",
+          "apr": "indicative mathematical borrower IRR"
+        },
+        "metrics": {
+          "total_income": 7618.546414010051,
+          "expected_loss": 2903.7212142505196,
+          "funding_cost": 3033.5004397546077,
+          "operating_cost": 1244.0,
+          "collection_cost": 23.99999999999993,
+          "capital_charge": 529.483713120804,
+          "tax": 2.1953650578440733,
+          "expected_profit": -118.35431817372046,
+          "npv": -5202.093560460688,
+          "lender_irr": -0.0021426458090905154,
+          "indicative_borrower_apr": 0.14835555680556345,
+          "roi": -0.0011823608209162882,
+          "average_economic_capital": 4412.3642760067005,
+          "raroc": 0.09317666657367697,
+          "break_even_cumulative_default_rate": null
+        },
+        "calculation_trace": [
+          {
+            "id": "F01",
+            "formula": "monthly_rate = nominal_annual_rate / 12",
+            "substitution": "0.12 / 12",
+            "result": 0.01,
+            "unit": "decimal/month"
+          },
+          {
+            "id": "F02",
+            "formula": "monthly_hazard = 1-(1-cumulative_default_rate)^(1/term_months)",
+            "substitution": "1-(1-0.08)^(1/12)",
+            "result": 0.006924382628299419,
+            "unit": "probability/month"
+          },
+          {
+            "id": "F03",
+            "formula": "upfront_fee = principal*upfront_fee_rate+upfront_fee_fixed",
+            "substitution": "100000.0*0.01+0",
+            "result": 1000.0,
+            "unit": "CNY"
+          },
+          {
+            "id": "F04",
+            "formula": "NPV = sum(lender_cashflow_t/(1+monthly_discount_rate)^t)",
+            "substitution": "monthly_discount_rate=0.007974140428903764; periods=0..12",
+            "result": -5202.093560460688,
+            "unit": "CNY"
+          },
+          {
+            "id": "F05",
+            "formula": "ROI = expected_profit/abs(initial_lender_outflow)",
+            "substitution": "-118.35431817372046/abs(-100100.0)",
+            "result": -0.0011823608209162882,
+            "unit": "decimal"
+          },
+          {
+            "id": "F06",
+            "formula": "RAROC = (risk_adjusted_profit*12/term_months)/average_economic_capital",
+            "substitution": "(411.1293949470799*12/12)/4412.3642760067005",
+            "result": 0.09317666657367697,
+            "unit": "decimal/year"
+          }
+        ],
+        "cashflows": [
+          {
+            "month": 1,
+            "opening_balance": 100000.0,
+            "scheduled_payment": 8884.878867834166,
+            "principal": 7884.878867834166,
+            "interest": 1000.0,
+            "monthly_fee": 0,
+            "closing_balance": 92115.12113216583,
+            "survival_open": 1.0,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.006924382628299419,
+            "expected_loss": 450.08487083946227,
+            "funding_cost": 458.3333333333333,
+            "servicing_cost": 12,
+            "collection_cost": 2.0773147884898258,
+            "economic_capital": 8000.0,
+            "capital_charge": 80.0,
+            "taxable_profit": -2.4955189612854127,
+            "tax": 0.0,
+            "lender_cashflow": 7882.383348872881,
+            "borrower_cashflow": -8884.878867834166
+          },
+          {
+            "month": 2,
+            "opening_balance": 92115.12113216583,
+            "scheduled_payment": 8884.87886783417,
+            "principal": 7963.727656512511,
+            "interest": 921.1512113216584,
+            "monthly_fee": 0,
+            "closing_balance": 84151.39347565333,
+            "survival_open": 0.9930756173717006,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.006876435553516324,
+            "expected_loss": 411.7254010802972,
+            "funding_cost": 422.1943051890934,
+            "servicing_cost": 12,
+            "collection_cost": 2.062930666054897,
+            "economic_capital": 7369.209690573267,
+            "capital_charge": 73.69209690573267,
+            "taxable_profit": -0.5235225195198439,
+            "tax": 0.0,
+            "lender_cashflow": 7963.204133992991,
+            "borrower_cashflow": -8884.87886783417
+          },
+          {
+            "month": 3,
+            "opening_balance": 84151.39347565333,
+            "scheduled_payment": 8884.878867834172,
+            "principal": 8043.364933077638,
+            "interest": 841.5139347565333,
+            "monthly_fee": 0,
+            "closing_balance": 76108.02854257569,
+            "survival_open": 0.9861991818181842,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.006828820482624935,
+            "expected_loss": 373.5255936151816,
+            "funding_cost": 385.69388676341106,
+            "servicing_cost": 12,
+            "collection_cost": 2.0486461447874804,
+            "economic_capital": 6732.111478052267,
+            "capital_charge": 67.32111478052266,
+            "taxable_profit": 0.924693452630521,
+            "tax": 0.23117336315763026,
+            "lender_cashflow": 8044.058453167111,
+            "borrower_cashflow": -8884.878867834172
+          },
+          {
+            "month": 4,
+            "opening_balance": 76108.02854257569,
+            "scheduled_payment": 8884.878867834172,
+            "principal": 8123.798582408414,
+            "interest": 761.0802854257569,
+            "monthly_fee": 0,
+            "closing_balance": 67984.22996016727,
+            "survival_open": 0.9793703613355593,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.006781535116703272,
+            "expected_loss": 335.4840243459458,
+            "funding_cost": 348.8284641534719,
+            "servicing_cost": 12,
+            "collection_cost": 2.0344605350109815,
+            "economic_capital": 6088.642283406055,
+            "capital_charge": 60.88642283406055,
+            "taxable_profit": 1.8469135572676763,
+            "tax": 0.46172838931691906,
+            "lender_cashflow": 8125.183767576365,
+            "borrower_cashflow": -8884.878867834172
+          },
+          {
+            "month": 5,
+            "opening_balance": 67984.22996016727,
+            "scheduled_payment": 8884.878867834159,
+            "principal": 8205.036568232486,
+            "interest": 679.8422996016727,
+            "monthly_fee": 0,
+            "closing_balance": 59779.19339193479,
+            "survival_open": 0.972588826218856,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.006734577172747969,
+            "expected_loss": 297.5992780777842,
+            "funding_cost": 311.5943873174333,
+            "servicing_cost": 12,
+            "collection_cost": 2.0203731518243906,
+            "economic_capital": 5438.738396813382,
+            "capital_charge": 54.38738396813381,
+            "taxable_profit": 2.240877086497001,
+            "tax": 0.5602192716242502,
+            "lender_cashflow": 8206.717226047358,
+            "borrower_cashflow": -8884.878867834159
+          },
+          {
+            "month": 6,
+            "opening_balance": 59779.19339193479,
+            "scheduled_payment": 8884.878867834168,
+            "principal": 8287.08693391482,
+            "interest": 597.7919339193479,
+            "monthly_fee": 0,
+            "closing_balance": 51492.10645801997,
+            "survival_open": 0.9658542490461081,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.0066879443835640515,
+            "expected_loss": 259.8699484547267,
+            "funding_cost": 273.98796971303443,
+            "servicing_cost": 12,
+            "collection_cost": 2.0063833150692156,
+            "economic_capital": 4782.335471354783,
+            "capital_charge": 47.823354713547836,
+            "taxable_profit": 2.104277722969748,
+            "tax": 0.526069430742437,
+            "lender_cashflow": 8288.665142207048,
+            "borrower_cashflow": -8884.878867834168
+          },
+          {
+            "month": 7,
+            "opening_balance": 51492.10645801997,
+            "scheduled_payment": 8884.878867834157,
+            "principal": 8369.957803253958,
+            "interest": 514.9210645801996,
+            "monthly_fee": 0,
+            "closing_balance": 43122.14865476601,
+            "survival_open": 0.959166304662544,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.0066416344976554685,
+            "expected_loss": 222.29463789554666,
+            "funding_cost": 236.0054879325915,
+            "servicing_cost": 12,
+            "collection_cost": 1.9924903492966406,
+            "economic_capital": 4119.368516641597,
+            "capital_charge": 41.19368516641597,
+            "taxable_profit": 1.4347632363488714,
+            "tax": 0.35869080908721784,
+            "lender_cashflow": 8371.03387568122,
+            "borrower_cashflow": -8884.878867834157
+          },
+          {
+            "month": 8,
+            "opening_balance": 43122.14865476601,
+            "scheduled_payment": 8884.878867834153,
+            "principal": 8453.657381286494,
+            "interest": 431.2214865476601,
+            "monthly_fee": 0,
+            "closing_balance": 34668.491273479514,
+            "survival_open": 0.9525246701648886,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.006595645279116389,
+            "expected_loss": 184.8719575301057,
+            "funding_cost": 197.6431813343442,
+            "servicing_cost": 12,
+            "collection_cost": 1.9786935837349167,
+            "economic_capital": 3449.771892381281,
+            "capital_charge": 34.497718923812805,
+            "taxable_profit": 0.2299351756624759,
+            "tax": 0.057483793915618975,
+            "lender_cashflow": 8453.829832668242,
+            "borrower_cashflow": -8884.878867834153
+          },
+          {
+            "month": 9,
+            "opening_balance": 34668.491273479514,
+            "scheduled_payment": 8884.878867834179,
+            "principal": 8538.193955099383,
+            "interest": 346.68491273479515,
+            "monthly_fee": 0,
+            "closing_balance": 26130.29731838013,
+            "survival_open": 0.9459290248857722,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.00654997450752325,
+            "expected_loss": 147.60052713612902,
+            "funding_cost": 158.89725167011443,
+            "servicing_cost": 12,
+            "collection_cost": 1.964992352256975,
+            "economic_capital": 2773.479301878361,
+            "capital_charge": 27.73479301878361,
+            "taxable_profit": -1.512651442488881,
+            "tax": 0.0,
+            "lender_cashflow": 8536.681303656895,
+            "borrower_cashflow": -8884.878867834179
+          },
+          {
+            "month": 10,
+            "opening_balance": 26130.29731838013,
+            "scheduled_payment": 8884.87886783415,
+            "principal": 8623.575894650348,
+            "interest": 261.3029731838013,
+            "monthly_fee": 0,
+            "closing_balance": 17506.72142372978,
+            "survival_open": 0.939379050378249,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.006504619977827552,
+            "expected_loss": 110.47897507641092,
+            "funding_cost": 119.76386270924226,
+            "servicing_cost": 12,
+            "collection_cost": 1.9513859933482656,
+            "economic_capital": 2090.4237854704106,
+            "capital_charge": 20.904237854704103,
+            "taxable_profit": -3.795488449904205,
+            "tax": 0.0,
+            "lender_cashflow": 8619.780406200443,
+            "borrower_cashflow": -8884.87886783415
+          },
+          {
+            "month": 11,
+            "opening_balance": 17506.72142372978,
+            "scheduled_payment": 8884.8788678342,
+            "principal": 8709.811653596902,
+            "interest": 175.0672142372978,
+            "monthly_fee": 0,
+            "closing_balance": 8796.90977013288,
+            "survival_open": 0.9328744304004214,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.006459579500249393,
+            "expected_loss": 73.50593823644614,
+            "funding_cost": 80.2391398587615,
+            "servicing_cost": 12,
+            "collection_cost": 1.937873850074818,
+            "economic_capital": 1400.5377138983824,
+            "capital_charge": 14.005377138983825,
+            "taxable_profit": -6.621114846968484,
+            "tax": 0.0,
+            "lender_cashflow": 8703.190538749934,
+            "borrower_cashflow": -8884.8788678342
+          },
+          {
+            "month": 12,
+            "opening_balance": 8796.90977013288,
+            "scheduled_payment": 8884.878867834208,
+            "principal": 8796.90977013288,
+            "interest": 87.96909770132879,
+            "monthly_fee": 0,
+            "closing_balance": 0.0,
+            "survival_open": 0.926414850900172,
+            "monthly_hazard": 0.006924382628299419,
+            "expected_default_probability": 0.006414850900171748,
+            "expected_loss": 36.68006196248325,
+            "funding_cost": 40.3191697797757,
+            "servicing_cost": 12,
+            "collection_cost": 1.9244552700515243,
+            "economic_capital": 703.7527816106303,
+            "capital_charge": 7.037527816106302,
+            "taxable_profit": -9.992117127087983,
+            "tax": 0.0,
+            "lender_cashflow": 8786.917653005792,
+            "borrower_cashflow": -8884.878867834208
+          }
+        ],
+        "validation": {
+          "errors": [],
+          "warnings": [
+            {
+              "code": "APR_INDICATIVE",
+              "path": "metadata.jurisdiction",
+              "message": "borrower APR is mathematical IRR, not a confirmed regulatory disclosure rate"
+            }
+          ],
+          "reconciliation": [
+            {
+              "name": "ending_balance_zero",
+              "difference": 0.0,
+              "tolerance": 1e-08,
+              "passed": true
+            },
+            {
+              "name": "principal_rollforward",
+              "difference": 0.0,
+              "tolerance": 1e-08,
+              "passed": true
+            },
+            {
+              "name": "cashflow_identity",
+              "difference": -1.8189894035458565e-12,
+              "tolerance": 1e-08,
+              "passed": true
+            },
+            {
+              "name": "survival_to_cdr",
+              "difference": -1.5265566588595902e-16,
+              "tolerance": 1e-10,
+              "passed": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "stress",
+      "overrides": {
+        "risk.cumulative_default_rate": 0.12,
+        "risk.lgd": 0.75,
+        "costs.funding_annual_rate": 0.065
+      },
+      "result": {
+        "status": "valid",
+        "input_snapshot": {
+          "metadata": {
+            "model_id": "demo-001",
+            "product_name": "示例经营贷",
+            "as_of_date": "2026-08-10",
+            "currency": "CNY",
+            "jurisdiction": "CN",
+            "stage": "feasibility"
+          },
+          "contract": {
+            "principal": 100000,
+            "term_months": 12,
+            "repayment_method": "annuity"
+          },
+          "pricing": {
+            "nominal_annual_rate": 0.12,
+            "upfront_fee_rate": 0.01,
+            "upfront_fee_fixed": 0,
+            "monthly_fee": 0,
+            "fee_financed": false
+          },
+          "risk": {
+            "cumulative_default_rate": 0.12,
+            "lgd": 0.75,
+            "recovery_lag_months": 0
+          },
+          "costs": {
+            "funding_annual_rate": 0.065,
+            "acquisition_cost": 800,
+            "origination_cost": 300,
+            "monthly_servicing_cost": 12,
+            "collection_cost_per_default": 300,
+            "tax_rate": 0.25
+          },
+          "capital": {
+            "economic_capital_rate": 0.08,
+            "hurdle_annual_rate": 0.12
+          },
+          "valuation": {
+            "discount_annual_rate": 0.1
+          },
+          "targets": {
+            "minimum_npv": 0,
+            "minimum_raroc": 0.12,
+            "maximum_apr": 0.18
+          },
+          "lineage": [
+            {
+              "path": "risk.cumulative_default_rate",
+              "source": "DEMO ONLY",
+              "as_of_date": "2026-08-10",
+              "owner": "demo",
+              "status": "assumed",
+              "confidence": "low",
+              "note": "示例值，不得用于决策"
+            }
+          ]
+        },
+        "conventions": {
+          "period": "monthly",
+          "timing": "origination at t0; other cash flows at period end",
+          "rounding": "full precision in JSON; presentation may round",
+          "apr": "indicative mathematical borrower IRR"
+        },
+        "metrics": {
+          "total_income": 7618.546414010051,
+          "expected_loss": 5058.574107730202,
+          "funding_cost": 3585.045974255446,
+          "operating_cost": 1244.0,
+          "collection_cost": 35.99999999999992,
+          "capital_charge": 529.483713120804,
+          "tax": 0.0,
+          "expected_profit": -2834.557381096399,
+          "npv": -7821.349159680899,
+          "lender_irr": -0.05015430322988734,
+          "indicative_borrower_apr": 0.14835555680556345,
+          "roi": -0.02831725655440958,
+          "average_economic_capital": 4412.3642760067005,
+          "raroc": -0.5224123675622144,
+          "break_even_cumulative_default_rate": null
+        },
+        "calculation_trace": [
+          {
+            "id": "F01",
+            "formula": "monthly_rate = nominal_annual_rate / 12",
+            "substitution": "0.12 / 12",
+            "result": 0.01,
+            "unit": "decimal/month"
+          },
+          {
+            "id": "F02",
+            "formula": "monthly_hazard = 1-(1-cumulative_default_rate)^(1/term_months)",
+            "substitution": "1-(1-0.12)^(1/12)",
+            "result": 0.010596241035318976,
+            "unit": "probability/month"
+          },
+          {
+            "id": "F03",
+            "formula": "upfront_fee = principal*upfront_fee_rate+upfront_fee_fixed",
+            "substitution": "100000.0*0.01+0",
+            "result": 1000.0,
+            "unit": "CNY"
+          },
+          {
+            "id": "F04",
+            "formula": "NPV = sum(lender_cashflow_t/(1+monthly_discount_rate)^t)",
+            "substitution": "monthly_discount_rate=0.007974140428903764; periods=0..12",
+            "result": -7821.349159680899,
+            "unit": "CNY"
+          },
+          {
+            "id": "F05",
+            "formula": "ROI = expected_profit/abs(initial_lender_outflow)",
+            "substitution": "-2834.557381096399/abs(-100100.0)",
+            "result": -0.02831725655440958,
+            "unit": "decimal"
+          },
+          {
+            "id": "F06",
+            "formula": "RAROC = (risk_adjusted_profit*12/term_months)/average_economic_capital",
+            "substitution": "(-2305.0736679755964*12/12)/4412.3642760067005",
+            "result": -0.5224123675622144,
+            "unit": "decimal/year"
+          }
+        ],
+        "cashflows": [
+          {
+            "month": 1,
+            "opening_balance": 100000.0,
+            "scheduled_payment": 8884.878867834166,
+            "principal": 7884.878867834166,
+            "interest": 1000.0,
+            "monthly_fee": 0,
+            "closing_balance": 92115.12113216583,
+            "survival_open": 1.0,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.010596241035318976,
+            "expected_loss": 794.7180776489232,
+            "funding_cost": 541.6666666666666,
+            "servicing_cost": 12,
+            "collection_cost": 3.178872310595693,
+            "economic_capital": 8000.0,
+            "capital_charge": 80.0,
+            "taxable_profit": -431.56361662618554,
+            "tax": 0.0,
+            "lender_cashflow": 7453.3152512079805,
+            "borrower_cashflow": -8884.878867834166
+          },
+          {
+            "month": 2,
+            "opening_balance": 92115.12113216583,
+            "scheduled_payment": 8884.87886783417,
+            "principal": 7963.727656512511,
+            "interest": 921.1512113216584,
+            "monthly_fee": 0,
+            "closing_balance": 84151.39347565333,
+            "survival_open": 0.989403758964681,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.010483960711240399,
+            "expected_loss": 724.2984831455826,
+            "funding_cost": 498.95690613256494,
+            "servicing_cost": 12,
+            "collection_cost": 3.1451882133721196,
+            "economic_capital": 7369.209690573267,
+            "capital_charge": 73.69209690573267,
+            "taxable_profit": -390.941463075594,
+            "tax": 0.0,
+            "lender_cashflow": 7572.7861934369175,
+            "borrower_cashflow": -8884.87886783417
+          },
+          {
+            "month": 3,
+            "opening_balance": 84151.39347565333,
+            "scheduled_payment": 8884.878867834172,
+            "principal": 8043.364933077638,
+            "interest": 841.5139347565333,
+            "monthly_fee": 0,
+            "closing_balance": 76108.02854257569,
+            "survival_open": 0.9789197982534407,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.010372870136539281,
+            "expected_loss": 654.6686072488282,
+            "funding_cost": 455.8200479931222,
+            "servicing_cost": 12,
+            "collection_cost": 3.1118610409617844,
+            "economic_capital": 6732.111478052267,
+            "capital_charge": 67.32111478052266,
+            "taxable_profit": -351.40769630690147,
+            "tax": 0.0,
+            "lender_cashflow": 7691.957236770737,
+            "borrower_cashflow": -8884.878867834172
+          },
+          {
+            "month": 4,
+            "opening_balance": 76108.02854257569,
+            "scheduled_payment": 8884.878867834172,
+            "principal": 8123.798582408414,
+            "interest": 761.0802854257569,
+            "monthly_fee": 0,
+            "closing_balance": 67984.22996016727,
+            "survival_open": 0.9685469281169014,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.01026295670434445,
+            "expected_loss": 585.8200513390993,
+            "funding_cost": 412.251821272285,
+            "servicing_cost": 12,
+            "collection_cost": 3.0788870113033346,
+            "economic_capital": 6088.642283406055,
+            "capital_charge": 60.88642283406055,
+            "taxable_profit": -312.95689703099134,
+            "tax": 0.0,
+            "lender_cashflow": 7810.841685377423,
+            "borrower_cashflow": -8884.878867834172
+          },
+          {
+            "month": 5,
+            "opening_balance": 67984.22996016727,
+            "scheduled_payment": 8884.878867834159,
+            "principal": 8205.036568232486,
+            "interest": 679.8422996016727,
+            "monthly_fee": 0,
+            "closing_balance": 59779.19339193479,
+            "survival_open": 0.958283971412557,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.010154207941370173,
+            "expected_loss": 517.7445058120999,
+            "funding_cost": 368.2479122842394,
+            "servicing_cost": 12,
+            "collection_cost": 3.0462623824110517,
+            "economic_capital": 5438.738396813382,
+            "capital_charge": 54.38738396813381,
+            "taxable_profit": -275.5837648452114,
+            "tax": 0.0,
+            "lender_cashflow": 7929.452803387275,
+            "borrower_cashflow": -8884.878867834159
+          },
+          {
+            "month": 6,
+            "opening_balance": 59779.19339193479,
+            "scheduled_payment": 8884.878867834168,
+            "principal": 8287.08693391482,
+            "interest": 597.7919339193479,
+            "monthly_fee": 0,
+            "closing_balance": 51492.10645801997,
+            "survival_open": 0.9481297634711868,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.010046611506500665,
+            "expected_loss": 450.4337491355554,
+            "funding_cost": 323.8039642063134,
+            "servicing_cost": 12,
+            "collection_cost": 3.0139834519501996,
+            "economic_capital": 4782.335471354783,
+            "capital_charge": 47.823354713547836,
+            "taxable_profit": -239.28311758801894,
+            "tax": 0.0,
+            "lender_cashflow": 8047.8038163268,
+            "borrower_cashflow": -8884.878867834168
+          },
+          {
+            "month": 7,
+            "opening_balance": 51492.10645801997,
+            "scheduled_payment": 8884.878867834157,
+            "principal": 8369.957803253958,
+            "interest": 514.9210645801996,
+            "monthly_fee": 0,
+            "closing_balance": 43122.14865476601,
+            "survival_open": 0.9380831519646862,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.009940155189389574,
+            "expected_loss": 383.8796469159657,
+            "funding_cost": 278.9155766476082,
+            "servicing_cost": 12,
+            "collection_cost": 2.982046556816872,
+            "economic_capital": 4119.368516641597,
+            "capital_charge": 41.19368516641597,
+            "taxable_profit": -204.04989070660707,
+            "tax": 0.0,
+            "lender_cashflow": 8165.907912547351,
+            "borrower_cashflow": -8884.878867834157
+          },
+          {
+            "month": 8,
+            "opening_balance": 43122.14865476601,
+            "scheduled_payment": 8884.878867834153,
+            "principal": 8453.657381286494,
+            "interest": 431.2214865476601,
+            "monthly_fee": 0,
+            "closing_balance": 34668.491273479514,
+            "survival_open": 0.9281429967752965,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.009834826909074326,
+            "expected_loss": 318.074150975247,
+            "funding_cost": 233.5783052133159,
+            "servicing_cost": 12,
+            "collection_cost": 2.9504480727222977,
+            "economic_capital": 3449.771892381281,
+            "capital_charge": 34.497718923812805,
+            "taxable_profit": -169.8791366374379,
+            "tax": 0.0,
+            "lender_cashflow": 8283.778244649056,
+            "borrower_cashflow": -8884.878867834153
+          },
+          {
+            "month": 9,
+            "opening_balance": 34668.491273479514,
+            "scheduled_payment": 8884.878867834179,
+            "principal": 8538.193955099383,
+            "interest": 346.68491273479515,
+            "monthly_fee": 0,
+            "closing_balance": 26130.29731838013,
+            "survival_open": 0.9183081698662222,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.009730614712605133,
+            "expected_loss": 253.00929843715681,
+            "funding_cost": 187.78766106468072,
+            "servicing_cost": 12,
+            "collection_cost": 2.91918441378154,
+            "economic_capital": 2773.479301878361,
+            "capital_charge": 27.73479301878361,
+            "taxable_profit": -136.76602419960753,
+            "tax": 0.0,
+            "lender_cashflow": 8401.427930899776,
+            "borrower_cashflow": -8884.878867834179
+          },
+          {
+            "month": 10,
+            "opening_balance": 26130.29731838013,
+            "scheduled_payment": 8884.87886783415,
+            "principal": 8623.575894650348,
+            "interest": 261.3029731838013,
+            "monthly_fee": 0,
+            "closing_balance": 17506.72142372978,
+            "survival_open": 0.908577555153617,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.009627506773688546,
+            "expected_loss": 188.6772108234003,
+            "funding_cost": 141.53911047455904,
+            "servicing_cost": 12,
+            "collection_cost": 2.888252032106564,
+            "economic_capital": 2090.4237854704106,
+            "capital_charge": 20.904237854704103,
+            "taxable_profit": -104.70583800096867,
+            "tax": 0.0,
+            "lender_cashflow": 8518.870056649379,
+            "borrower_cashflow": -8884.87886783415
+          },
+          {
+            "month": 11,
+            "opening_balance": 17506.72142372978,
+            "scheduled_payment": 8884.8788678342,
+            "principal": 8709.811653596902,
+            "interest": 175.0672142372978,
+            "monthly_fee": 0,
+            "closing_balance": 8796.90977013288,
+            "survival_open": 0.8989500483799285,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.009525491391345378,
+            "expected_loss": 125.0700931593148,
+            "funding_cost": 94.82807437853631,
+            "servicing_cost": 12,
+            "collection_cost": 2.8576474174036135,
+            "economic_capital": 1400.5377138983824,
+            "capital_charge": 14.005377138983825,
+            "taxable_profit": -73.69397785694073,
+            "tax": 0.0,
+            "lender_cashflow": 8636.11767573996,
+            "borrower_cashflow": -8884.8788678342
+          },
+          {
+            "month": 12,
+            "opening_balance": 8796.90977013288,
+            "scheduled_payment": 8884.878867834208,
+            "principal": 8796.90977013288,
+            "interest": 87.96909770132879,
+            "monthly_fee": 0,
+            "closing_balance": 0.0,
+            "survival_open": 0.8894245569885831,
+            "monthly_hazard": 0.010596241035318976,
+            "expected_default_probability": 0.009424556988582826,
+            "expected_loss": 62.180233089028775,
+            "funding_cost": 47.6499279215531,
+            "servicing_cost": 12,
+            "collection_cost": 2.827367096574848,
+            "economic_capital": 703.7527816106303,
+            "capital_charge": 7.037527816106302,
+            "taxable_profit": -43.725958221934235,
+            "tax": 0.0,
+            "lender_cashflow": 8753.183811910945,
+            "borrower_cashflow": -8884.878867834208
+          }
+        ],
+        "validation": {
+          "errors": [],
+          "warnings": [
+            {
+              "code": "APR_INDICATIVE",
+              "path": "metadata.jurisdiction",
+              "message": "borrower APR is mathematical IRR, not a confirmed regulatory disclosure rate"
+            }
+          ],
+          "reconciliation": [
+            {
+              "name": "ending_balance_zero",
+              "difference": 0.0,
+              "tolerance": 1e-08,
+              "passed": true
+            },
+            {
+              "name": "principal_rollforward",
+              "difference": 0.0,
+              "tolerance": 1e-08,
+              "passed": true
+            },
+            {
+              "name": "cashflow_identity",
+              "difference": -9.094947017729282e-13,
+              "tolerance": 1e-08,
+              "passed": true
+            },
+            {
+              "name": "survival_to_cdr",
+              "difference": -3.3306690738754696e-16,
+              "tolerance": 1e-10,
+              "passed": true
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

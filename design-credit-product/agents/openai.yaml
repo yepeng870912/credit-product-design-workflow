@@ -1,0 +1,4 @@
+interface:
+  display_name: "信贷产品方案与定价"
+  short_description: "按地域完善信贷参数，生成可验证的单笔利润、情景分析及生命周期LTV模型"
+  default_prompt: "Use $design-credit-product to 完善地域化信贷产品方案，并生成带Vintage、提前结清、单笔毛利润和生命周期LTV的可审计模型。"

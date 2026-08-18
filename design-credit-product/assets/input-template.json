@@ -1,0 +1,19 @@
+{
+  "metadata": {"model_id": "", "product_name": "", "as_of_date": "YYYY-MM-DD", "currency": "CNY", "stage": "feasibility", "region": {"country": "CN", "province": "", "city": ""}},
+  "contract": {"principal": null, "term_months": null, "repayment_method": "annuity"},
+  "pricing": {
+    "nominal_annual_rate": null, "upfront_fee_rate": 0, "upfront_fee_fixed": 0, "monthly_fee": 0, "fee_financed": false,
+    "credit_enhancement_fee": {"rate": 0, "fixed": 0, "collection": "upfront"},
+    "bundled_service": {"rate": 0, "fixed": 0, "purchase_rate": 0, "collection": "installment"}
+  },
+  "risk": {"mode": "uniform", "cumulative_90_plus_rate": null, "lgd": null, "vintage": {"0_plus": [], "30_plus": [], "90_plus": []}},
+  "prepayment": {"mode": "none", "overall_rate": 0, "curve": []},
+  "costs": {"funding_annual_rate": null, "acquisition_origination_cost": 0, "monthly_operating_cost": 0, "collection_monthly_rate_on_overdue_balance": 0, "payment_rate_on_principal_recovered": 0, "credit_inquiry_fixed": 0, "credit_inquiry_rate_on_disbursement": 0},
+  "tax": {"vat_rate": null, "vat_base": "realized_income_minus_funding_cost", "income_tax_in_period_cashflow": false},
+  "capital": {"economic_capital_rate": 0},
+  "valuation": {"discount_annual_rate": null, "benchmark_name": "", "benchmark_source_url": "", "benchmark_effective_date": ""},
+  "lifecycle": {"repeat_count": 0, "repeat_probability": 0, "repeat_acquisition_cost_multiplier": 1},
+  "decision": {"metrics": []},
+  "compliance": {"policy_snapshot": {"pricing_rule": "", "maximum_all_in_rate": null, "tax_rule": "", "source_url": "", "effective_date": "", "verified_by": ""}},
+  "lineage": [], "scenarios": []
+}

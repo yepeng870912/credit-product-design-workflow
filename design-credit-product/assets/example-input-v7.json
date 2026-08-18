@@ -1,0 +1,37 @@
+{
+  "metadata": {"model_id": "demo-v7-idn-001", "product_name": "印度尼西亚小微经营贷V7", "as_of_date": "2026-08-17", "currency": "IDR", "stage": "feasibility", "region": {"country": "ID", "province": "全国", "city": "全国"}},
+  "contract": {"principal": 10000, "term_months": 9, "repayment_method": "equal_principal"},
+  "pricing": {
+    "nominal_annual_rate": 0.24, "upfront_fee_rate": 0, "upfront_fee_fixed": 0, "monthly_fee": 0, "fee_financed": false,
+    "credit_enhancement_fee": {"rate": 0.01, "fixed": 0, "collection": "installment"},
+    "bundled_service": {"rate": 0, "fixed": 100, "purchase_rate": 0.20, "collection": "upfront"}
+  },
+  "risk": {
+    "mode": "vintage", "cumulative_90_plus_rate": 0.033, "lgd": 0.65,
+    "vintage": {
+      "0_plus": [0.008, 0.014, 0.021, 0.028, 0.034, 0.040, 0.045, 0.050, 0.054, 0.052, 0.051, 0.050],
+      "30_plus": [0.003, 0.006, 0.010, 0.015, 0.020, 0.025, 0.030, 0.036, 0.041],
+      "90_plus": [0.000, 0.001, 0.003, 0.006, 0.010, 0.015, 0.021, 0.027, 0.033]
+    }
+  },
+  "prepayment": {"mode": "curve", "overall_rate": 0.105, "curve": [0.008, 0.010, 0.012, 0.015, 0.015, 0.015, 0.012, 0.010, 0.008]},
+  "costs": {"funding_annual_rate": 0.08, "acquisition_origination_cost": 1000, "monthly_operating_cost": 20, "collection_monthly_rate_on_overdue_balance": 0.008, "payment_rate_on_principal_recovered": 0.0015, "credit_inquiry_fixed": 8, "credit_inquiry_rate_on_disbursement": 0.0002},
+  "tax": {"vat_rate": 0.06, "vat_base": "cash_income_minus_funding_cost_divided_by_1.06", "income_tax_in_period_cashflow": false},
+  "capital": {"economic_capital_rate": 0.08},
+  "valuation": {"discount_annual_rate": 0.0575, "benchmark_name": "BI-Rate", "benchmark_source_url": "https://www.bi.go.id/en/statistik/indikator/BI-Rate.aspx", "benchmark_effective_date": "2026-07-22"},
+  "lifecycle": {"repeat_count": 3, "repeat_principal": 5000, "repeat_probability": 0.55, "repeat_acquisition_cost_multiplier": 0.30},
+  "decision": {"metrics": [
+    {"name": "expected_gross_profit", "operator": ">=", "threshold": 0},
+    {"name": "npv", "operator": ">=", "threshold": 0},
+    {"name": "raroc", "operator": ">=", "threshold": 0.12},
+    {"name": "apr_without_bundled_product", "operator": "<=", "threshold": 0.365},
+    {"name": "apr_with_bundled_product", "operator": "<=", "threshold": 0.365},
+    {"name": "ltv", "operator": ">=", "threshold": 0}
+  ]},
+  "compliance": {"policy_snapshot": {"pricing_rule": "生产性LPBBTI、期限超过6个月：每日最大经济利益0.1%；须按适用主体及全部费用复核", "maximum_all_in_rate": 0.365, "tax_rule": "案例VAT公式仅为用户指定模型口径，正式使用前须由印尼税务顾问确认", "source_url": "https://ojk.go.id/id/berita-dan-kegiatan/siaran-pers/Documents/Pages/LPBBTI-dan-BNPL/SP%20214%20-%20LPBBTI%20dan%20BNPL.pdf", "effective_date": "2025-01-01", "verified_by": "Codex初步检索；待当地法务确认"}},
+  "lineage": [
+    {"path": "risk.vintage.0_plus", "source": "信贷产品实例输入V7.xlsx", "as_of_date": "2026-08-17", "owner": "user", "status": "provided", "confidence": "medium", "note": "1-12期"},
+    {"path": "risk.vintage.30_plus/90_plus/risk.lgd", "source": "模型临时假设", "as_of_date": "2026-08-17", "owner": "model", "status": "assumed", "confidence": "low", "note": "附件为空；仅用于完成二次验证，投产前必须替换"},
+    {"path": "prepayment.curve", "source": "信贷产品实例输入V7.xlsx", "as_of_date": "2026-08-17", "owner": "user", "status": "adjusted", "confidence": "medium", "note": "附件10个值；9个月合同仅采用前9个，第10个0.01未纳入"}
+  ]
+}

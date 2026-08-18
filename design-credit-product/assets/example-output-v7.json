@@ -1,0 +1,1680 @@
+{
+  "base": {
+    "status": "valid",
+    "single_loan": {
+      "status": "valid",
+      "input_snapshot": {
+        "metadata": {
+          "model_id": "demo-v7-idn-001",
+          "product_name": "印度尼西亚小微经营贷V7",
+          "as_of_date": "2026-08-17",
+          "currency": "IDR",
+          "stage": "feasibility",
+          "region": {
+            "country": "ID",
+            "province": "全国",
+            "city": "全国"
+          }
+        },
+        "contract": {
+          "principal": 10000,
+          "term_months": 9,
+          "repayment_method": "equal_principal"
+        },
+        "pricing": {
+          "nominal_annual_rate": 0.24,
+          "upfront_fee_rate": 0,
+          "upfront_fee_fixed": 0,
+          "monthly_fee": 0,
+          "fee_financed": false,
+          "credit_enhancement_fee": {
+            "rate": 0.01,
+            "fixed": 0,
+            "collection": "installment"
+          },
+          "bundled_service": {
+            "rate": 0,
+            "fixed": 100,
+            "purchase_rate": 0.2,
+            "collection": "upfront"
+          }
+        },
+        "risk": {
+          "mode": "vintage",
+          "cumulative_90_plus_rate": 0.033,
+          "lgd": 0.65,
+          "vintage": {
+            "0_plus": [
+              0.008,
+              0.014,
+              0.021,
+              0.028,
+              0.034,
+              0.04,
+              0.045,
+              0.05,
+              0.054,
+              0.052,
+              0.051,
+              0.05
+            ],
+            "30_plus": [
+              0.003,
+              0.006,
+              0.01,
+              0.015,
+              0.02,
+              0.025,
+              0.03,
+              0.036,
+              0.041
+            ],
+            "90_plus": [
+              0.0,
+              0.001,
+              0.003,
+              0.006,
+              0.01,
+              0.015,
+              0.021,
+              0.027,
+              0.033
+            ]
+          }
+        },
+        "prepayment": {
+          "mode": "curve",
+          "overall_rate": 0.105,
+          "curve": [
+            0.008,
+            0.01,
+            0.012,
+            0.015,
+            0.015,
+            0.015,
+            0.012,
+            0.01,
+            0.008
+          ]
+        },
+        "costs": {
+          "funding_annual_rate": 0.08,
+          "acquisition_origination_cost": 1000,
+          "monthly_operating_cost": 20,
+          "collection_monthly_rate_on_overdue_balance": 0.008,
+          "payment_rate_on_principal_recovered": 0.0015,
+          "credit_inquiry_fixed": 8,
+          "credit_inquiry_rate_on_disbursement": 0.0002
+        },
+        "tax": {
+          "vat_rate": 0.06,
+          "vat_base": "cash_income_minus_funding_cost_divided_by_1.06",
+          "income_tax_in_period_cashflow": false
+        },
+        "capital": {
+          "economic_capital_rate": 0.08
+        },
+        "valuation": {
+          "discount_annual_rate": 0.0575,
+          "benchmark_name": "BI-Rate",
+          "benchmark_source_url": "https://www.bi.go.id/en/statistik/indikator/BI-Rate.aspx",
+          "benchmark_effective_date": "2026-07-22"
+        },
+        "lifecycle": {
+          "repeat_count": 3,
+          "repeat_principal": 5000,
+          "repeat_probability": 0.55,
+          "repeat_acquisition_cost_multiplier": 0.3
+        },
+        "decision": {
+          "metrics": [
+            {
+              "name": "expected_gross_profit",
+              "operator": ">=",
+              "threshold": 0
+            },
+            {
+              "name": "npv",
+              "operator": ">=",
+              "threshold": 0
+            },
+            {
+              "name": "raroc",
+              "operator": ">=",
+              "threshold": 0.12
+            },
+            {
+              "name": "apr_without_bundled_product",
+              "operator": "<=",
+              "threshold": 0.365
+            },
+            {
+              "name": "apr_with_bundled_product",
+              "operator": "<=",
+              "threshold": 0.365
+            },
+            {
+              "name": "ltv",
+              "operator": ">=",
+              "threshold": 0
+            }
+          ]
+        },
+        "compliance": {
+          "policy_snapshot": {
+            "pricing_rule": "生产性LPBBTI、期限超过6个月：每日最大经济利益0.1%；须按适用主体及全部费用复核",
+            "maximum_all_in_rate": 0.365,
+            "tax_rule": "案例VAT公式仅为用户指定模型口径，正式使用前须由印尼税务顾问确认",
+            "source_url": "https://ojk.go.id/id/berita-dan-kegiatan/siaran-pers/Documents/Pages/LPBBTI-dan-BNPL/SP%20214%20-%20LPBBTI%20dan%20BNPL.pdf",
+            "effective_date": "2025-01-01",
+            "verified_by": "Codex初步检索；待当地法务确认"
+          }
+        },
+        "lineage": [
+          {
+            "path": "risk.vintage.0_plus",
+            "source": "信贷产品实例输入V7.xlsx",
+            "as_of_date": "2026-08-17",
+            "owner": "user",
+            "status": "provided",
+            "confidence": "medium",
+            "note": "1-12期"
+          },
+          {
+            "path": "risk.vintage.30_plus/90_plus/risk.lgd",
+            "source": "模型临时假设",
+            "as_of_date": "2026-08-17",
+            "owner": "model",
+            "status": "assumed",
+            "confidence": "low",
+            "note": "附件为空；仅用于完成二次验证，投产前必须替换"
+          },
+          {
+            "path": "prepayment.curve",
+            "source": "信贷产品实例输入V7.xlsx",
+            "as_of_date": "2026-08-17",
+            "owner": "user",
+            "status": "adjusted",
+            "confidence": "medium",
+            "note": "附件10个值；9个月合同仅采用前9个，第10个0.01未纳入"
+          }
+        ]
+      },
+      "borrower_metrics": {
+        "without_bundled_product": {
+          "monthly_irr": 0.02194377938205889,
+          "annualized_irr": 0.2633253525847067,
+          "apr": 0.14666666666666667,
+          "total_interest_cost": 999.9999999999999,
+          "total_credit_enhancement_fee": 100.0,
+          "total_bundled_product_expenditure": 0.0,
+          "total_borrowing_cost": 1100.0,
+          "irr_equation_residual": 5.820766091346741e-11,
+          "cashflows": [
+            10000.0,
+            -1322.2222222222222,
+            -1300.0,
+            -1277.7777777777776,
+            -1255.5555555555554,
+            -1233.3333333333333,
+            -1211.111111111111,
+            -1188.888888888889,
+            -1166.6666666666665,
+            -1144.444444444443
+          ],
+          "cashflow_detail": [
+            {
+              "month": 0,
+              "principal_received": 10000.0,
+              "principal_repayment": 0.0,
+              "interest_payment": 0.0,
+              "credit_enhancement_fee": 0.0,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": 10000.0,
+              "irr_discount_factor": 1.0,
+              "irr_discounted_cashflow": 10000.0
+            },
+            {
+              "month": 1,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 200.0,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1322.2222222222222,
+              "irr_discount_factor": 1.021943779382059,
+              "irr_discounted_cashflow": -1293.8306870674758
+            },
+            {
+              "month": 2,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 177.77777777777777,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1300.0,
+              "irr_discount_factor": 1.0443690882176864,
+              "irr_discounted_cashflow": -1244.7706607427185
+            },
+            {
+              "month": 3,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 155.55555555555554,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1277.7777777777776,
+              "irr_discount_factor": 1.0672864930829773,
+              "irr_discounted_cashflow": -1197.2209768033065
+            },
+            {
+              "month": 4,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 133.33333333333331,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1255.5555555555554,
+              "irr_discount_factor": 1.0907067924246416,
+              "irr_discounted_cashflow": -1151.1393935344024
+            },
+            {
+              "month": 5,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 111.1111111111111,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1233.3333333333333,
+              "irr_discount_factor": 1.114641021648121,
+              "irr_discounted_cashflow": -1106.4847869224411
+            },
+            {
+              "month": 6,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 88.88888888888887,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1211.111111111111,
+              "irr_discount_factor": 1.13910045831736,
+              "irr_discounted_cashflow": -1063.2171221317237
+            },
+            {
+              "month": 7,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 66.66666666666664,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1188.888888888889,
+              "irr_discount_factor": 1.1640966274686786,
+              "irr_discounted_cashflow": -1021.2974256906156
+            },
+            {
+              "month": 8,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 44.444444444444414,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1166.6666666666665,
+              "irr_discount_factor": 1.1896413070412502,
+              "irr_discounted_cashflow": -980.6877583700218
+            },
+            {
+              "month": 9,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.1111111111097,
+              "interest_payment": 22.222222222222197,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1144.444444444443,
+              "irr_discount_factor": 1.2157465334267474,
+              "irr_discounted_cashflow": -941.3511887372364
+            }
+          ]
+        },
+        "with_bundled_product": {
+          "monthly_irr": 0.02411808470979395,
+          "annualized_irr": 0.2894170165175274,
+          "apr": 0.15999999999999998,
+          "total_interest_cost": 999.9999999999999,
+          "total_credit_enhancement_fee": 100.0,
+          "total_bundled_product_expenditure": 100.0,
+          "total_borrowing_cost": 1200.0,
+          "irr_equation_residual": -2.3419488570652902e-11,
+          "cashflows": [
+            9900.0,
+            -1322.2222222222222,
+            -1300.0,
+            -1277.7777777777776,
+            -1255.5555555555554,
+            -1233.3333333333333,
+            -1211.111111111111,
+            -1188.888888888889,
+            -1166.6666666666665,
+            -1144.444444444443
+          ],
+          "cashflow_detail": [
+            {
+              "month": 0,
+              "principal_received": 10000.0,
+              "principal_repayment": 0.0,
+              "interest_payment": 0.0,
+              "credit_enhancement_fee": 0.0,
+              "bundled_product_expenditure": 100.0,
+              "net_cashflow": 9900.0,
+              "irr_discount_factor": 1.0,
+              "irr_discounted_cashflow": 9900.0
+            },
+            {
+              "month": 1,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 200.0,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1322.2222222222222,
+              "irr_discount_factor": 1.024118084709794,
+              "irr_discounted_cashflow": -1291.083754855186
+            },
+            {
+              "month": 2,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 177.77777777777777,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1300.0,
+              "irr_discount_factor": 1.0488178514296567,
+              "irr_discounted_cashflow": -1239.490725894829
+            },
+            {
+              "month": 3,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 155.55555555555554,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1277.7777777777776,
+              "irr_discount_factor": 1.0741133292155811,
+              "irr_discounted_cashflow": -1189.6116946159968
+            },
+            {
+              "month": 4,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 133.33333333333331,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1255.5555555555554,
+              "irr_discount_factor": 1.1000188854775212,
+              "irr_discounted_cashflow": -1141.3945452495711
+            },
+            {
+              "month": 5,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 111.1111111111111,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1233.3333333333333,
+              "irr_discount_factor": 1.1265492341398413,
+              "irr_discounted_cashflow": -1094.7886660941413
+            },
+            {
+              "month": 6,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 88.88888888888887,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1211.111111111111,
+              "irr_discount_factor": 1.1537194439985794,
+              "irr_discounted_cashflow": -1049.7449075778966
+            },
+            {
+              "month": 7,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 66.66666666666664,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1188.888888888889,
+              "irr_discount_factor": 1.1815449472802735,
+              "irr_discounted_cashflow": -1006.215541461643
+            },
+            {
+              "month": 8,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.111111111111,
+              "interest_payment": 44.444444444444414,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1166.6666666666665,
+              "irr_discount_factor": 1.2100415484072082,
+              "irr_discounted_cashflow": -964.1542211524583
+            },
+            {
+              "month": 9,
+              "principal_received": 0.0,
+              "principal_repayment": 1111.1111111111097,
+              "interest_payment": 22.222222222222197,
+              "credit_enhancement_fee": 11.11111111111111,
+              "bundled_product_expenditure": 0.0,
+              "net_cashflow": -1144.444444444443,
+              "irr_discount_factor": 1.2392254329740635,
+              "irr_discounted_cashflow": -923.5159430983012
+            }
+          ]
+        }
+      },
+      "borrower_metric_scope": {
+        "included": [
+          "interest",
+          "credit_enhancement_fee",
+          "bundled_product_expenditure"
+        ],
+        "excluded": [
+          "principal_repayment_as_cost",
+          "upfront_fee",
+          "monthly_fee"
+        ],
+        "bundled_basis": "two actual populations only: purchaser and non-purchaser"
+      },
+      "metrics": {
+        "expected_gross_profit": -1137.7772955974856,
+        "npv": -1344.9274841755582,
+        "roi_on_disbursement": -0.11377772955974856,
+        "average_economic_capital": 304.33333333333337,
+        "raroc": -4.98478552288055,
+        "gross_profit": -1137.7772955974856
+      },
+      "calculation_trace": [
+        {
+          "id": "F01",
+          "formula": "monthly_rate=nominal_annual_rate/12",
+          "substitution": "0.24/12",
+          "result": 0.02
+        },
+        {
+          "id": "F02",
+          "formula": "net_company_cashflow=-disbursement+principal_cash_inflow+income_cash_inflow-acquisition_origination-credit_inquiry-funding-collection_operating-payment-VAT",
+          "substitution": "see company_cashflows and company_cashflow_summary",
+          "result": -1137.7772955974856
+        },
+        {
+          "id": "F03",
+          "formula": "VAT=(income_cash_inflow-funding_cost)/1.06*VAT_rate",
+          "substitution": "vat_rate=0.06; calculated by period",
+          "result": 39.73396226415093
+        },
+        {
+          "id": "F04",
+          "formula": "solve monthly r where sum(borrower_cashflow_t/(1+r)^t)=0; annual_IRR=monthly_IRR*12",
+          "substitution": "see borrower_metrics for both populations",
+          "result": {
+            "without_bundled_product": 0.2633253525847067,
+            "with_bundled_product": 0.2894170165175274
+          }
+        },
+        {
+          "id": "F04A",
+          "formula": "APR=(interest+credit_enhancement_fee+actual_bundled_expenditure)/principal/term_months*12",
+          "substitution": "see borrower_metrics for both populations",
+          "result": {
+            "without_bundled_product": 0.14666666666666667,
+            "with_bundled_product": 0.15999999999999998
+          }
+        },
+        {
+          "id": "F04B",
+          "formula": "income_cash_inflow_t=interest_bearing_principal_t/previous_planned_ending_principal_t*planned_interest_and_fees_t",
+          "substitution": "calculated by period",
+          "result": 1006.3
+        },
+        {
+          "id": "F04C",
+          "formula": "funding_cost_t=(interest_bearing_principal_t+new_0_plus_overdue_principal_t)*funding_annual_rate/12",
+          "substitution": "prepaid principal excluded; newly overdue principal remains funded because the company compensates overdue interest",
+          "result": 304.3333333333333
+        },
+        {
+          "id": "F04D",
+          "formula": "post_maturity_recovery_t=(previous_0_plus-current_0_plus)*disbursement",
+          "substitution": "only months after contractual maturity",
+          "result": 39.999999999999964
+        },
+        {
+          "id": "F05",
+          "formula": "NPV=sum(lender_cashflow_t/(1+monthly_benchmark_rate)^t)",
+          "substitution": "monthly_discount=0.004669839200035719",
+          "result": -1344.9274841755582
+        },
+        {
+          "id": "F06",
+          "formula": "RAROC=annualized_gross_profit/average_economic_capital",
+          "substitution": "(-1137.7772955974856*12/9)/304.33333333333337",
+          "result": -4.98478552288055
+        }
+      ],
+      "compliance_checks": [
+        {
+          "name": "region_complete",
+          "value": {
+            "country": "ID",
+            "province": "全国",
+            "city": "全国"
+          },
+          "passed": true,
+          "source": "input"
+        },
+        {
+          "name": "policy_snapshot_verified",
+          "value": "Codex初步检索；待当地法务确认",
+          "passed": true,
+          "source": "https://ojk.go.id/id/berita-dan-kegiatan/siaran-pers/Documents/Pages/LPBBTI-dan-BNPL/SP%20214%20-%20LPBBTI%20dan%20BNPL.pdf"
+        },
+        {
+          "name": "apr_without_bundled_product_within_supplied_cap",
+          "value": 0.14666666666666667,
+          "threshold": 0.365,
+          "passed": true,
+          "source": "https://ojk.go.id/id/berita-dan-kegiatan/siaran-pers/Documents/Pages/LPBBTI-dan-BNPL/SP%20214%20-%20LPBBTI%20dan%20BNPL.pdf"
+        },
+        {
+          "name": "apr_with_bundled_product_within_supplied_cap",
+          "value": 0.15999999999999998,
+          "threshold": 0.365,
+          "passed": true,
+          "source": "https://ojk.go.id/id/berita-dan-kegiatan/siaran-pers/Documents/Pages/LPBBTI-dan-BNPL/SP%20214%20-%20LPBBTI%20dan%20BNPL.pdf"
+        },
+        {
+          "name": "discount_benchmark_sourced",
+          "value": "BI-Rate",
+          "passed": true,
+          "source": "https://www.bi.go.id/en/statistik/indikator/BI-Rate.aspx"
+        },
+        {
+          "name": "income_tax_excluded",
+          "value": false,
+          "passed": true,
+          "source": "model convention"
+        }
+      ],
+      "portfolio_curves": [
+        {
+          "month": 1,
+          "cumulative_0_plus": 0.008,
+          "cumulative_90_plus": 0.0,
+          "cumulative_prepayment": 0.008
+        },
+        {
+          "month": 2,
+          "cumulative_0_plus": 0.014,
+          "cumulative_90_plus": 0.001,
+          "cumulative_prepayment": 0.018000000000000002
+        },
+        {
+          "month": 3,
+          "cumulative_0_plus": 0.021,
+          "cumulative_90_plus": 0.003,
+          "cumulative_prepayment": 0.030000000000000002
+        },
+        {
+          "month": 4,
+          "cumulative_0_plus": 0.028,
+          "cumulative_90_plus": 0.006,
+          "cumulative_prepayment": 0.045
+        },
+        {
+          "month": 5,
+          "cumulative_0_plus": 0.034,
+          "cumulative_90_plus": 0.01,
+          "cumulative_prepayment": 0.06
+        },
+        {
+          "month": 6,
+          "cumulative_0_plus": 0.04,
+          "cumulative_90_plus": 0.015,
+          "cumulative_prepayment": 0.075
+        },
+        {
+          "month": 7,
+          "cumulative_0_plus": 0.045,
+          "cumulative_90_plus": 0.021,
+          "cumulative_prepayment": 0.087
+        },
+        {
+          "month": 8,
+          "cumulative_0_plus": 0.05,
+          "cumulative_90_plus": 0.027,
+          "cumulative_prepayment": 0.09699999999999999
+        },
+        {
+          "month": 9,
+          "cumulative_0_plus": 0.054,
+          "cumulative_90_plus": 0.033,
+          "cumulative_prepayment": 0.10499999999999998
+        },
+        {
+          "month": 10,
+          "cumulative_0_plus": 0.052,
+          "cumulative_90_plus": null,
+          "cumulative_prepayment": 0.10499999999999998
+        },
+        {
+          "month": 11,
+          "cumulative_0_plus": 0.051,
+          "cumulative_90_plus": null,
+          "cumulative_prepayment": 0.10499999999999998
+        },
+        {
+          "month": 12,
+          "cumulative_0_plus": 0.05,
+          "cumulative_90_plus": null,
+          "cumulative_prepayment": 0.10499999999999998
+        }
+      ],
+      "company_cashflows": [
+        {
+          "month": 0,
+          "disbursement": 10000.0,
+          "principal_cash_inflow": 0.0,
+          "income_cash_inflow": 20.0,
+          "acquisition_origination_cost": 1000.0,
+          "credit_inquiry_cost": 10.0,
+          "funding_cost": 0.0,
+          "collection_operating_cost": 0.0,
+          "payment_cost": 0.0,
+          "vat": 1.132075471698113,
+          "net_company_cashflow": -10991.132075471698
+        },
+        {
+          "month": 1,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 1173.3333333333333,
+          "income_cash_inflow": 207.73333333333332,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 66.13333333333334,
+          "collection_operating_cost": 20.64,
+          "payment_cost": 1.76,
+          "vat": 8.015094339622639,
+          "net_company_cashflow": 1284.5182389937104
+        },
+        {
+          "month": 2,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 1173.3333333333333,
+          "income_cash_inflow": 182.46666666666667,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 57.644444444444446,
+          "collection_operating_cost": 21.12,
+          "payment_cost": 1.76,
+          "vat": 7.065408805031446,
+          "net_company_cashflow": 1268.2101467505242
+        },
+        {
+          "month": 3,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 1166.1904761904761,
+          "income_cash_inflow": 156.92857142857142,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 49.28888888888889,
+          "collection_operating_cost": 21.68,
+          "payment_cost": 1.7492857142857143,
+          "vat": 6.092812219227312,
+          "net_company_cashflow": 1244.3080607966453
+        },
+        {
+          "month": 4,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 1159.5238095238096,
+          "income_cash_inflow": 131.2380952380952,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 40.84761904761905,
+          "collection_operating_cost": 22.240000000000002,
+          "payment_cost": 1.7392857142857145,
+          "vat": 5.116442048517518,
+          "net_company_cashflow": 1220.8185579514827
+        },
+        {
+          "month": 5,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 1117.5238095238096,
+          "income_cash_inflow": 106.42761904761906,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 32.65079365079365,
+          "collection_operating_cost": 22.72,
+          "payment_cost": 1.6762857142857144,
+          "vat": 4.176046720575023,
+          "net_company_cashflow": 1162.7283024857743
+        },
+        {
+          "month": 6,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 1065.0238095238096,
+          "income_cash_inflow": 82.35214285714285,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 24.80063492063492,
+          "collection_operating_cost": 23.2,
+          "payment_cost": 1.5975357142857145,
+          "vat": 3.257632524707996,
+          "net_company_cashflow": 1094.520149221324
+        },
+        {
+          "month": 7,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 978.3571428571429,
+          "income_cash_inflow": 60.084999999999994,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 17.50047619047619,
+          "collection_operating_cost": 23.6,
+          "payment_cost": 1.4675357142857144,
+          "vat": 2.4104447439353094,
+          "net_company_cashflow": 993.4636862084457
+        },
+        {
+          "month": 8,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 883.357142857143,
+          "income_cash_inflow": 39.16785714285713,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 10.778095238095233,
+          "collection_operating_cost": 24.0,
+          "payment_cost": 1.3250357142857145,
+          "vat": 1.6069676549865224,
+          "net_company_cashflow": 884.8149013926326
+        },
+        {
+          "month": 9,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 743.3571428571416,
+          "income_cash_inflow": 19.900714285714262,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 4.689047619047612,
+          "collection_operating_cost": 24.32,
+          "payment_cost": 1.1150357142857126,
+          "vat": 0.8610377358490556,
+          "net_company_cashflow": 732.2727360736734
+        },
+        {
+          "month": 10,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 20.000000000000018,
+          "income_cash_inflow": 0.0,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 0.0,
+          "collection_operating_cost": 24.16,
+          "payment_cost": 0.030000000000000027,
+          "vat": 0.0,
+          "net_company_cashflow": -4.189999999999983
+        },
+        {
+          "month": 11,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 10.000000000000009,
+          "income_cash_inflow": 0.0,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 0.0,
+          "collection_operating_cost": 24.08,
+          "payment_cost": 0.015000000000000013,
+          "vat": 0.0,
+          "net_company_cashflow": -14.09499999999999
+        },
+        {
+          "month": 12,
+          "disbursement": 0.0,
+          "principal_cash_inflow": 9.99999999999994,
+          "income_cash_inflow": 0.0,
+          "acquisition_origination_cost": 0.0,
+          "credit_inquiry_cost": 0.0,
+          "funding_cost": 3.789561257387201e-16,
+          "collection_operating_cost": 24.0,
+          "payment_cost": 0.01499999999999991,
+          "vat": -2.1450346739927552e-17,
+          "net_company_cashflow": -14.015000000000061
+        }
+      ],
+      "company_cashflow_summary": {
+        "disbursement": {
+          "total": 10000.0,
+          "ratio_to_disbursement": 1.0
+        },
+        "principal_cash_inflow": {
+          "total": 9499.999999999998,
+          "ratio_to_disbursement": 0.9499999999999998
+        },
+        "income_cash_inflow": {
+          "total": 1006.3,
+          "ratio_to_disbursement": 0.10063
+        },
+        "acquisition_origination_cost": {
+          "total": 1000.0,
+          "ratio_to_disbursement": 0.1
+        },
+        "credit_inquiry_cost": {
+          "total": 10.0,
+          "ratio_to_disbursement": 0.001
+        },
+        "funding_cost": {
+          "total": 304.3333333333333,
+          "ratio_to_disbursement": 0.030433333333333333
+        },
+        "collection_operating_cost": {
+          "total": 275.76,
+          "ratio_to_disbursement": 0.027576
+        },
+        "payment_cost": {
+          "total": 14.25,
+          "ratio_to_disbursement": 0.001425
+        },
+        "vat": {
+          "total": 39.73396226415093,
+          "ratio_to_disbursement": 0.003973396226415093
+        },
+        "net_company_cashflow": {
+          "total": -1137.7772955974856,
+          "ratio_to_disbursement": -0.11377772955974856
+        }
+      },
+      "cashflows": [
+        {
+          "month": 1,
+          "opening_balance": 10000.0,
+          "scheduled_principal": 1111.111111111111,
+          "scheduled_interest": 200.0,
+          "scheduled_payment": 1311.111111111111,
+          "closing_balance": 8888.888888888889,
+          "previous_actual_ending_principal": 10000.0,
+          "previous_planned_ending_principal": 10000.0,
+          "cumulative_prepayment_rate": 0.008,
+          "cumulative_prepayment_principal": 80.0,
+          "current_prepayment_principal": 80.0,
+          "vintage_0_plus": 0.008,
+          "cumulative_overdue_0_plus_principal": 80.0,
+          "new_overdue_0_plus_principal": 80.0,
+          "interest_bearing_principal": 9840.0,
+          "planned_principal_repayment": 1111.111111111111,
+          "planned_interest_and_fees": 211.11111111111111,
+          "actual_normal_principal_repayment": 1093.3333333333333,
+          "requested_post_maturity_principal_recovery": 0.0,
+          "post_maturity_principal_recovery": 0.0,
+          "actual_ending_principal": 8826.666666666666,
+          "principal_cash_inflow": 1173.3333333333333,
+          "income_cash_inflow": 207.73333333333332,
+          "funding_cost_base": 9920.0,
+          "funding_cost": 66.13333333333334,
+          "overdue_balance": 80.0,
+          "collection_cost": 0.64,
+          "operating_cost": 20,
+          "collection_operating_cost": 20.64,
+          "payment_cost": 1.76,
+          "economic_capital": 793.6,
+          "vat_base": 141.59999999999997,
+          "vat": 8.015094339622639,
+          "company_net_cashflow": 1284.5182389937104
+        },
+        {
+          "month": 2,
+          "opening_balance": 8888.888888888889,
+          "scheduled_principal": 1111.111111111111,
+          "scheduled_interest": 177.77777777777777,
+          "scheduled_payment": 1288.888888888889,
+          "closing_balance": 7777.777777777777,
+          "previous_actual_ending_principal": 8826.666666666666,
+          "previous_planned_ending_principal": 8888.888888888889,
+          "cumulative_prepayment_rate": 0.018000000000000002,
+          "cumulative_prepayment_principal": 180.00000000000003,
+          "current_prepayment_principal": 100.00000000000003,
+          "vintage_0_plus": 0.014,
+          "cumulative_overdue_0_plus_principal": 140.0,
+          "new_overdue_0_plus_principal": 60.0,
+          "interest_bearing_principal": 8586.666666666666,
+          "planned_principal_repayment": 1111.111111111111,
+          "planned_interest_and_fees": 188.88888888888889,
+          "actual_normal_principal_repayment": 1073.3333333333333,
+          "requested_post_maturity_principal_recovery": 0.0,
+          "post_maturity_principal_recovery": 0.0,
+          "actual_ending_principal": 7653.333333333333,
+          "principal_cash_inflow": 1173.3333333333333,
+          "income_cash_inflow": 182.46666666666667,
+          "funding_cost_base": 8646.666666666666,
+          "funding_cost": 57.644444444444446,
+          "overdue_balance": 140.0,
+          "collection_cost": 1.12,
+          "operating_cost": 20,
+          "collection_operating_cost": 21.12,
+          "payment_cost": 1.76,
+          "economic_capital": 691.7333333333333,
+          "vat_base": 124.82222222222222,
+          "vat": 7.065408805031446,
+          "company_net_cashflow": 1268.2101467505242
+        },
+        {
+          "month": 3,
+          "opening_balance": 7777.777777777777,
+          "scheduled_principal": 1111.111111111111,
+          "scheduled_interest": 155.55555555555554,
+          "scheduled_payment": 1266.6666666666665,
+          "closing_balance": 6666.666666666666,
+          "previous_actual_ending_principal": 7653.333333333333,
+          "previous_planned_ending_principal": 7777.777777777777,
+          "cumulative_prepayment_rate": 0.030000000000000002,
+          "cumulative_prepayment_principal": 300.0,
+          "current_prepayment_principal": 119.99999999999997,
+          "vintage_0_plus": 0.021,
+          "cumulative_overdue_0_plus_principal": 210.0,
+          "new_overdue_0_plus_principal": 70.0,
+          "interest_bearing_principal": 7323.333333333333,
+          "planned_principal_repayment": 1111.111111111111,
+          "planned_interest_and_fees": 166.66666666666666,
+          "actual_normal_principal_repayment": 1046.1904761904761,
+          "requested_post_maturity_principal_recovery": 0.0,
+          "post_maturity_principal_recovery": 0.0,
+          "actual_ending_principal": 6487.142857142857,
+          "principal_cash_inflow": 1166.1904761904761,
+          "income_cash_inflow": 156.92857142857142,
+          "funding_cost_base": 7393.333333333333,
+          "funding_cost": 49.28888888888889,
+          "overdue_balance": 210.0,
+          "collection_cost": 1.68,
+          "operating_cost": 20,
+          "collection_operating_cost": 21.68,
+          "payment_cost": 1.7492857142857143,
+          "economic_capital": 591.4666666666667,
+          "vat_base": 107.63968253968252,
+          "vat": 6.092812219227312,
+          "company_net_cashflow": 1244.3080607966453
+        },
+        {
+          "month": 4,
+          "opening_balance": 6666.666666666666,
+          "scheduled_principal": 1111.111111111111,
+          "scheduled_interest": 133.33333333333331,
+          "scheduled_payment": 1244.4444444444443,
+          "closing_balance": 5555.555555555555,
+          "previous_actual_ending_principal": 6487.142857142857,
+          "previous_planned_ending_principal": 6666.666666666666,
+          "cumulative_prepayment_rate": 0.045,
+          "cumulative_prepayment_principal": 450.0,
+          "current_prepayment_principal": 150.0,
+          "vintage_0_plus": 0.028,
+          "cumulative_overdue_0_plus_principal": 280.0,
+          "new_overdue_0_plus_principal": 70.0,
+          "interest_bearing_principal": 6057.142857142857,
+          "planned_principal_repayment": 1111.111111111111,
+          "planned_interest_and_fees": 144.44444444444443,
+          "actual_normal_principal_repayment": 1009.5238095238095,
+          "requested_post_maturity_principal_recovery": 0.0,
+          "post_maturity_principal_recovery": 0.0,
+          "actual_ending_principal": 5327.619047619048,
+          "principal_cash_inflow": 1159.5238095238096,
+          "income_cash_inflow": 131.2380952380952,
+          "funding_cost_base": 6127.142857142857,
+          "funding_cost": 40.84761904761905,
+          "overdue_balance": 280.0,
+          "collection_cost": 2.24,
+          "operating_cost": 20,
+          "collection_operating_cost": 22.240000000000002,
+          "payment_cost": 1.7392857142857145,
+          "economic_capital": 490.1714285714286,
+          "vat_base": 90.39047619047616,
+          "vat": 5.116442048517518,
+          "company_net_cashflow": 1220.8185579514827
+        },
+        {
+          "month": 5,
+          "opening_balance": 5555.555555555555,
+          "scheduled_principal": 1111.111111111111,
+          "scheduled_interest": 111.1111111111111,
+          "scheduled_payment": 1222.2222222222222,
+          "closing_balance": 4444.444444444443,
+          "previous_actual_ending_principal": 5327.619047619048,
+          "previous_planned_ending_principal": 5555.555555555555,
+          "cumulative_prepayment_rate": 0.06,
+          "cumulative_prepayment_principal": 600.0,
+          "current_prepayment_principal": 150.0,
+          "vintage_0_plus": 0.034,
+          "cumulative_overdue_0_plus_principal": 340.0,
+          "new_overdue_0_plus_principal": 60.0,
+          "interest_bearing_principal": 4837.619047619048,
+          "planned_principal_repayment": 1111.111111111111,
+          "planned_interest_and_fees": 122.22222222222221,
+          "actual_normal_principal_repayment": 967.5238095238097,
+          "requested_post_maturity_principal_recovery": 0.0,
+          "post_maturity_principal_recovery": 0.0,
+          "actual_ending_principal": 4210.095238095238,
+          "principal_cash_inflow": 1117.5238095238096,
+          "income_cash_inflow": 106.42761904761906,
+          "funding_cost_base": 4897.619047619048,
+          "funding_cost": 32.65079365079365,
+          "overdue_balance": 340.0,
+          "collection_cost": 2.72,
+          "operating_cost": 20,
+          "collection_operating_cost": 22.72,
+          "payment_cost": 1.6762857142857144,
+          "economic_capital": 391.80952380952385,
+          "vat_base": 73.77682539682542,
+          "vat": 4.176046720575023,
+          "company_net_cashflow": 1162.7283024857743
+        },
+        {
+          "month": 6,
+          "opening_balance": 4444.444444444443,
+          "scheduled_principal": 1111.111111111111,
+          "scheduled_interest": 88.88888888888887,
+          "scheduled_payment": 1200.0,
+          "closing_balance": 3333.333333333332,
+          "previous_actual_ending_principal": 4210.095238095238,
+          "previous_planned_ending_principal": 4444.444444444443,
+          "cumulative_prepayment_rate": 0.075,
+          "cumulative_prepayment_principal": 750.0,
+          "current_prepayment_principal": 150.0,
+          "vintage_0_plus": 0.04,
+          "cumulative_overdue_0_plus_principal": 400.0,
+          "new_overdue_0_plus_principal": 60.0,
+          "interest_bearing_principal": 3660.0952380952376,
+          "planned_principal_repayment": 1111.111111111111,
+          "planned_interest_and_fees": 99.99999999999999,
+          "actual_normal_principal_repayment": 915.0238095238095,
+          "requested_post_maturity_principal_recovery": 0.0,
+          "post_maturity_principal_recovery": 0.0,
+          "actual_ending_principal": 3145.071428571428,
+          "principal_cash_inflow": 1065.0238095238096,
+          "income_cash_inflow": 82.35214285714285,
+          "funding_cost_base": 3720.0952380952376,
+          "funding_cost": 24.80063492063492,
+          "overdue_balance": 400.0,
+          "collection_cost": 3.2,
+          "operating_cost": 20,
+          "collection_operating_cost": 23.2,
+          "payment_cost": 1.5975357142857145,
+          "economic_capital": 297.60761904761904,
+          "vat_base": 57.55150793650793,
+          "vat": 3.257632524707996,
+          "company_net_cashflow": 1094.520149221324
+        },
+        {
+          "month": 7,
+          "opening_balance": 3333.333333333332,
+          "scheduled_principal": 1111.111111111111,
+          "scheduled_interest": 66.66666666666664,
+          "scheduled_payment": 1177.7777777777778,
+          "closing_balance": 2222.222222222221,
+          "previous_actual_ending_principal": 3145.071428571428,
+          "previous_planned_ending_principal": 3333.333333333332,
+          "cumulative_prepayment_rate": 0.087,
+          "cumulative_prepayment_principal": 869.9999999999999,
+          "current_prepayment_principal": 119.99999999999989,
+          "vintage_0_plus": 0.045,
+          "cumulative_overdue_0_plus_principal": 450.0,
+          "new_overdue_0_plus_principal": 50.0,
+          "interest_bearing_principal": 2575.071428571428,
+          "planned_principal_repayment": 1111.111111111111,
+          "planned_interest_and_fees": 77.77777777777776,
+          "actual_normal_principal_repayment": 858.357142857143,
+          "requested_post_maturity_principal_recovery": 0.0,
+          "post_maturity_principal_recovery": 0.0,
+          "actual_ending_principal": 2166.714285714285,
+          "principal_cash_inflow": 978.3571428571429,
+          "income_cash_inflow": 60.084999999999994,
+          "funding_cost_base": 2625.071428571428,
+          "funding_cost": 17.50047619047619,
+          "overdue_balance": 450.0,
+          "collection_cost": 3.6,
+          "operating_cost": 20,
+          "collection_operating_cost": 23.6,
+          "payment_cost": 1.4675357142857144,
+          "economic_capital": 210.00571428571425,
+          "vat_base": 42.5845238095238,
+          "vat": 2.4104447439353094,
+          "company_net_cashflow": 993.4636862084457
+        },
+        {
+          "month": 8,
+          "opening_balance": 2222.222222222221,
+          "scheduled_principal": 1111.111111111111,
+          "scheduled_interest": 44.444444444444414,
+          "scheduled_payment": 1155.5555555555554,
+          "closing_balance": 1111.1111111111097,
+          "previous_actual_ending_principal": 2166.714285714285,
+          "previous_planned_ending_principal": 2222.222222222221,
+          "cumulative_prepayment_rate": 0.09699999999999999,
+          "cumulative_prepayment_principal": 969.9999999999999,
+          "current_prepayment_principal": 100.0,
+          "vintage_0_plus": 0.05,
+          "cumulative_overdue_0_plus_principal": 500.0,
+          "new_overdue_0_plus_principal": 50.0,
+          "interest_bearing_principal": 1566.7142857142849,
+          "planned_principal_repayment": 1111.111111111111,
+          "planned_interest_and_fees": 55.55555555555553,
+          "actual_normal_principal_repayment": 783.357142857143,
+          "requested_post_maturity_principal_recovery": 0.0,
+          "post_maturity_principal_recovery": 0.0,
+          "actual_ending_principal": 1283.3571428571418,
+          "principal_cash_inflow": 883.357142857143,
+          "income_cash_inflow": 39.16785714285713,
+          "funding_cost_base": 1616.7142857142849,
+          "funding_cost": 10.778095238095233,
+          "overdue_balance": 500.0,
+          "collection_cost": 4.0,
+          "operating_cost": 20,
+          "collection_operating_cost": 24.0,
+          "payment_cost": 1.3250357142857145,
+          "economic_capital": 129.3371428571428,
+          "vat_base": 28.389761904761897,
+          "vat": 1.6069676549865224,
+          "company_net_cashflow": 884.8149013926326
+        },
+        {
+          "month": 9,
+          "opening_balance": 1111.1111111111097,
+          "scheduled_principal": 1111.1111111111097,
+          "scheduled_interest": 22.222222222222197,
+          "scheduled_payment": 1133.333333333332,
+          "closing_balance": 0.0,
+          "previous_actual_ending_principal": 1283.3571428571418,
+          "previous_planned_ending_principal": 1111.1111111111097,
+          "cumulative_prepayment_rate": 0.10499999999999998,
+          "cumulative_prepayment_principal": 1049.9999999999998,
+          "current_prepayment_principal": 79.99999999999989,
+          "vintage_0_plus": 0.054,
+          "cumulative_overdue_0_plus_principal": 540.0,
+          "new_overdue_0_plus_principal": 40.0,
+          "interest_bearing_principal": 663.3571428571418,
+          "planned_principal_repayment": 1111.1111111111097,
+          "planned_interest_and_fees": 33.33333333333331,
+          "actual_normal_principal_repayment": 663.3571428571418,
+          "requested_post_maturity_principal_recovery": 0.0,
+          "post_maturity_principal_recovery": 0.0,
+          "actual_ending_principal": 540.0,
+          "principal_cash_inflow": 743.3571428571416,
+          "income_cash_inflow": 19.900714285714262,
+          "funding_cost_base": 703.3571428571418,
+          "funding_cost": 4.689047619047612,
+          "overdue_balance": 540.0,
+          "collection_cost": 4.32,
+          "operating_cost": 20,
+          "collection_operating_cost": 24.32,
+          "payment_cost": 1.1150357142857126,
+          "economic_capital": 56.26857142857134,
+          "vat_base": 15.21166666666665,
+          "vat": 0.8610377358490556,
+          "company_net_cashflow": 732.2727360736734
+        },
+        {
+          "month": 10,
+          "opening_balance": 0.0,
+          "scheduled_principal": 0.0,
+          "scheduled_interest": 0.0,
+          "scheduled_payment": 0.0,
+          "closing_balance": 0.0,
+          "previous_actual_ending_principal": 540.0,
+          "previous_planned_ending_principal": 0.0,
+          "cumulative_prepayment_rate": 0.10499999999999998,
+          "cumulative_prepayment_principal": 1049.9999999999998,
+          "current_prepayment_principal": 0.0,
+          "vintage_0_plus": 0.052,
+          "cumulative_overdue_0_plus_principal": 520.0,
+          "new_overdue_0_plus_principal": -20.0,
+          "interest_bearing_principal": 20.0,
+          "planned_principal_repayment": 0.0,
+          "planned_interest_and_fees": 0.0,
+          "actual_normal_principal_repayment": 0.0,
+          "requested_post_maturity_principal_recovery": 20.000000000000018,
+          "post_maturity_principal_recovery": 20.000000000000018,
+          "actual_ending_principal": 520.0,
+          "principal_cash_inflow": 20.000000000000018,
+          "income_cash_inflow": 0.0,
+          "funding_cost_base": 0.0,
+          "funding_cost": 0.0,
+          "overdue_balance": 520.0,
+          "collection_cost": 4.16,
+          "operating_cost": 20,
+          "collection_operating_cost": 24.16,
+          "payment_cost": 0.030000000000000027,
+          "economic_capital": 0.0,
+          "vat_base": 0.0,
+          "vat": 0.0,
+          "company_net_cashflow": -4.189999999999983
+        },
+        {
+          "month": 11,
+          "opening_balance": 0.0,
+          "scheduled_principal": 0.0,
+          "scheduled_interest": 0.0,
+          "scheduled_payment": 0.0,
+          "closing_balance": 0.0,
+          "previous_actual_ending_principal": 520.0,
+          "previous_planned_ending_principal": 0.0,
+          "cumulative_prepayment_rate": 0.10499999999999998,
+          "cumulative_prepayment_principal": 1049.9999999999998,
+          "current_prepayment_principal": 0.0,
+          "vintage_0_plus": 0.051,
+          "cumulative_overdue_0_plus_principal": 509.99999999999994,
+          "new_overdue_0_plus_principal": -10.000000000000057,
+          "interest_bearing_principal": 10.000000000000057,
+          "planned_principal_repayment": 0.0,
+          "planned_interest_and_fees": 0.0,
+          "actual_normal_principal_repayment": 0.0,
+          "requested_post_maturity_principal_recovery": 10.000000000000009,
+          "post_maturity_principal_recovery": 10.000000000000009,
+          "actual_ending_principal": 510.0,
+          "principal_cash_inflow": 10.000000000000009,
+          "income_cash_inflow": 0.0,
+          "funding_cost_base": 0.0,
+          "funding_cost": 0.0,
+          "overdue_balance": 509.99999999999994,
+          "collection_cost": 4.08,
+          "operating_cost": 20,
+          "collection_operating_cost": 24.08,
+          "payment_cost": 0.015000000000000013,
+          "economic_capital": 0.0,
+          "vat_base": 0.0,
+          "vat": 0.0,
+          "company_net_cashflow": -14.09499999999999
+        },
+        {
+          "month": 12,
+          "opening_balance": 0.0,
+          "scheduled_principal": 0.0,
+          "scheduled_interest": 0.0,
+          "scheduled_payment": 0.0,
+          "closing_balance": 0.0,
+          "previous_actual_ending_principal": 510.0,
+          "previous_planned_ending_principal": 0.0,
+          "cumulative_prepayment_rate": 0.10499999999999998,
+          "cumulative_prepayment_principal": 1049.9999999999998,
+          "current_prepayment_principal": 0.0,
+          "vintage_0_plus": 0.05,
+          "cumulative_overdue_0_plus_principal": 500.0,
+          "new_overdue_0_plus_principal": -9.999999999999943,
+          "interest_bearing_principal": 10.0,
+          "planned_principal_repayment": 0.0,
+          "planned_interest_and_fees": 0.0,
+          "actual_normal_principal_repayment": 0.0,
+          "requested_post_maturity_principal_recovery": 9.99999999999994,
+          "post_maturity_principal_recovery": 9.99999999999994,
+          "actual_ending_principal": 500.00000000000006,
+          "principal_cash_inflow": 9.99999999999994,
+          "income_cash_inflow": 0.0,
+          "funding_cost_base": 5.684341886080802e-14,
+          "funding_cost": 3.789561257387201e-16,
+          "overdue_balance": 500.0,
+          "collection_cost": 4.0,
+          "operating_cost": 20,
+          "collection_operating_cost": 24.0,
+          "payment_cost": 0.01499999999999991,
+          "economic_capital": 4.547473508864641e-15,
+          "vat_base": -3.789561257387201e-16,
+          "vat": -2.1450346739927552e-17,
+          "company_net_cashflow": -14.015000000000061
+        }
+      ],
+      "validation": {
+        "errors": [],
+        "warnings": [
+          {
+            "code": "APR_INDICATIVE",
+            "path": "metadata.region",
+            "message": "APR uses the configured simple annualized cost formula until regional disclosure rules are confirmed"
+          }
+        ],
+        "reconciliation": [
+          {
+            "name": "contractual_ending_balance_zero",
+            "difference": 0.0,
+            "tolerance": 1e-08,
+            "passed": true
+          },
+          {
+            "name": "contractual_principal_rollforward",
+            "difference": -1.8189894035458565e-12,
+            "tolerance": 1e-08,
+            "passed": true
+          },
+          {
+            "name": "actual_principal_rollforward",
+            "difference": 1.7621459846850485e-12,
+            "tolerance": 1e-08,
+            "passed": true
+          },
+          {
+            "name": "actual_ending_principal_nonnegative",
+            "difference": 500.00000000000006,
+            "tolerance": 1e-08,
+            "passed": true
+          },
+          {
+            "name": "gross_profit_equals_company_net_cashflow",
+            "difference": 0.0,
+            "tolerance": 1e-08,
+            "passed": true
+          },
+          {
+            "name": "no_income_tax",
+            "difference": 0.0,
+            "tolerance": 0.0,
+            "passed": true
+          },
+          {
+            "name": "borrower_irr_equations",
+            "difference": 5.820766091346741e-11,
+            "tolerance": 1e-08,
+            "passed": true
+          },
+          {
+            "name": "borrower_apr_formulas",
+            "difference": 0.0,
+            "tolerance": 1e-12,
+            "passed": true
+          },
+          {
+            "name": "company_cashflow_identity",
+            "difference": 0.0,
+            "tolerance": 1e-08,
+            "passed": true
+          }
+        ]
+      }
+    },
+    "lifecycle": {
+      "repeat_count": 3,
+      "cycles": [
+        {
+          "cycle": 1,
+          "reach_probability": 1.0,
+          "principal": 10000,
+          "acquisition_cost_multiplier": 1.0,
+          "single_loan_gross_profit": -1137.7772955974856,
+          "weighted_gross_profit": -1137.7772955974856
+        },
+        {
+          "cycle": 2,
+          "reach_probability": 0.55,
+          "principal": 5000,
+          "acquisition_cost_multiplier": 0.3,
+          "single_loan_gross_profit": -483.4546855345918,
+          "weighted_gross_profit": -265.9000770440255
+        },
+        {
+          "cycle": 3,
+          "reach_probability": 0.30250000000000005,
+          "principal": 5000,
+          "acquisition_cost_multiplier": 0.3,
+          "single_loan_gross_profit": -483.4546855345918,
+          "weighted_gross_profit": -146.24504237421405
+        },
+        {
+          "cycle": 4,
+          "reach_probability": 0.16637500000000005,
+          "principal": 5000,
+          "acquisition_cost_multiplier": 0.3,
+          "single_loan_gross_profit": -483.4546855345918,
+          "weighted_gross_profit": -80.43477330581774
+        }
+      ],
+      "monthly_timeline": [
+        {
+          "lifecycle_month": 0,
+          "expected_gross_profit": -10991.132075471698,
+          "cumulative_ltv": -10991.132075471698
+        },
+        {
+          "lifecycle_month": 1,
+          "expected_gross_profit": 1284.5182389937104,
+          "cumulative_ltv": -9706.613836477987
+        },
+        {
+          "lifecycle_month": 2,
+          "expected_gross_profit": 1268.2101467505242,
+          "cumulative_ltv": -8438.403689727464
+        },
+        {
+          "lifecycle_month": 3,
+          "expected_gross_profit": 1244.3080607966453,
+          "cumulative_ltv": -7194.095628930818
+        },
+        {
+          "lifecycle_month": 4,
+          "expected_gross_profit": 1220.8185579514827,
+          "cumulative_ltv": -5973.277070979335
+        },
+        {
+          "lifecycle_month": 5,
+          "expected_gross_profit": 1162.7283024857743,
+          "cumulative_ltv": -4810.548768493561
+        },
+        {
+          "lifecycle_month": 6,
+          "expected_gross_profit": 1094.520149221324,
+          "cumulative_ltv": -3716.028619272237
+        },
+        {
+          "lifecycle_month": 7,
+          "expected_gross_profit": 993.4636862084457,
+          "cumulative_ltv": -2722.564933063791
+        },
+        {
+          "lifecycle_month": 8,
+          "expected_gross_profit": 884.8149013926326,
+          "cumulative_ltv": -1837.7500316711585
+        },
+        {
+          "lifecycle_month": 9,
+          "expected_gross_profit": -2177.2999054357606,
+          "cumulative_ltv": -4015.049937106919
+        },
+        {
+          "lifecycle_month": 10,
+          "expected_gross_profit": 343.5525157232704,
+          "cumulative_ltv": -3671.4974213836485
+        },
+        {
+          "lifecycle_month": 11,
+          "expected_gross_profit": 329.1627903563942,
+          "cumulative_ltv": -3342.3346310272545
+        },
+        {
+          "lifecycle_month": 12,
+          "expected_gross_profit": 322.6697167190774,
+          "cumulative_ltv": -3019.6649143081772
+        },
+        {
+          "lifecycle_month": 13,
+          "expected_gross_profit": 330.2251034366578,
+          "cumulative_ltv": -2689.4398108715195
+        },
+        {
+          "lifecycle_month": 14,
+          "expected_gross_profit": 314.25028318358795,
+          "cumulative_ltv": -2375.1895276879313
+        },
+        {
+          "lifecycle_month": 15,
+          "expected_gross_profit": 295.4930410358641,
+          "cumulative_ltv": -2079.696486652067
+        },
+        {
+          "lifecycle_month": 16,
+          "expected_gross_profit": 267.70251370732257,
+          "cumulative_ltv": -1811.9939729447444
+        },
+        {
+          "lifecycle_month": 17,
+          "expected_gross_profit": 237.82409788297397,
+          "cumulative_ltv": -1574.1698750617704
+        },
+        {
+          "lifecycle_month": 18,
+          "expected_gross_profit": -1404.3899504099286,
+          "cumulative_ltv": -2978.559825471699
+        },
+        {
+          "lifecycle_month": 19,
+          "expected_gross_profit": 184.60613364779874,
+          "cumulative_ltv": -2793.9536918239
+        },
+        {
+          "lifecycle_month": 20,
+          "expected_gross_profit": 179.41565969601683,
+          "cumulative_ltv": -2614.538032127883
+        },
+        {
+          "lifecycle_month": 21,
+          "expected_gross_profit": 175.82246919549263,
+          "cumulative_ltv": -2438.7155629323906
+        },
+        {
+          "lifecycle_month": 22,
+          "expected_gross_profit": 181.6238068901618,
+          "cumulative_ltv": -2257.091756042229
+        },
+        {
+          "lifecycle_month": 23,
+          "expected_gross_profit": 172.8376557509734,
+          "cumulative_ltv": -2084.254100291256
+        },
+        {
+          "lifecycle_month": 24,
+          "expected_gross_profit": 162.52117256972525,
+          "cumulative_ltv": -1921.7329277215306
+        },
+        {
+          "lifecycle_month": 25,
+          "expected_gross_profit": 147.23638253902743,
+          "cumulative_ltv": -1774.4965451825033
+        },
+        {
+          "lifecycle_month": 26,
+          "expected_gross_profit": 130.8032538356357,
+          "cumulative_ltv": -1643.6932913468677
+        },
+        {
+          "lifecycle_month": 27,
+          "expected_gross_profit": -772.414472725461,
+          "cumulative_ltv": -2416.107764072329
+        },
+        {
+          "lifecycle_month": 28,
+          "expected_gross_profit": 101.53337350628931,
+          "cumulative_ltv": -2314.5743905660393
+        },
+        {
+          "lifecycle_month": 29,
+          "expected_gross_profit": 98.67861283280926,
+          "cumulative_ltv": -2215.89577773323
+        },
+        {
+          "lifecycle_month": 30,
+          "expected_gross_profit": 96.70235805752095,
+          "cumulative_ltv": -2119.193419675709
+        },
+        {
+          "lifecycle_month": 31,
+          "expected_gross_profit": 99.893093789589,
+          "cumulative_ltv": -2019.3003258861197
+        },
+        {
+          "lifecycle_month": 32,
+          "expected_gross_profit": 95.06071066303538,
+          "cumulative_ltv": -1924.2396152230842
+        },
+        {
+          "lifecycle_month": 33,
+          "expected_gross_profit": 89.3866449133489,
+          "cumulative_ltv": -1834.8529703097354
+        },
+        {
+          "lifecycle_month": 34,
+          "expected_gross_profit": 80.9800103964651,
+          "cumulative_ltv": -1753.8729599132703
+        },
+        {
+          "lifecycle_month": 35,
+          "expected_gross_profit": 71.94178960959964,
+          "cumulative_ltv": -1681.9311703036706
+        },
+        {
+          "lifecycle_month": 36,
+          "expected_gross_profit": 59.252188232128724,
+          "cumulative_ltv": -1622.678982071542
+        },
+        {
+          "lifecycle_month": 37,
+          "expected_gross_profit": -2.012305624999999,
+          "cumulative_ltv": -1624.6912876965418
+        },
+        {
+          "lifecycle_month": 38,
+          "expected_gross_profit": -2.8362778125,
+          "cumulative_ltv": -1627.5275655090418
+        },
+        {
+          "lifecycle_month": 39,
+          "expected_gross_profit": -2.8296228125000056,
+          "cumulative_ltv": -1630.3571883215418
+        }
+      ],
+      "ltv": -1630.3571883215418
+    },
+    "decision_results": [
+      {
+        "name": "expected_gross_profit",
+        "value": -1137.7772955974856,
+        "operator": ">=",
+        "threshold": 0,
+        "passed": false
+      },
+      {
+        "name": "npv",
+        "value": -1344.9274841755582,
+        "operator": ">=",
+        "threshold": 0,
+        "passed": false
+      },
+      {
+        "name": "raroc",
+        "value": -4.98478552288055,
+        "operator": ">=",
+        "threshold": 0.12,
+        "passed": false
+      },
+      {
+        "name": "apr_without_bundled_product",
+        "value": 0.14666666666666667,
+        "operator": "<=",
+        "threshold": 0.365,
+        "passed": true
+      },
+      {
+        "name": "apr_with_bundled_product",
+        "value": 0.15999999999999998,
+        "operator": "<=",
+        "threshold": 0.365,
+        "passed": true
+      },
+      {
+        "name": "ltv",
+        "value": -1630.3571883215418,
+        "operator": ">=",
+        "threshold": 0,
+        "passed": false
+      }
+    ]
+  },
+  "scenarios": []
+}
