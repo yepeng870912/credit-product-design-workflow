@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "model_id": "demo-configurable-v1",
+    "product_name": "虚构地区小微经营贷（能力演示）",
+    "as_of_date": "2026-11-16",
+    "currency": "DEMO",
+    "stage": "feasibility",
+    "region": {"country": "XX", "province": "Demo Province", "city": "Demo City"}
+  },
+  "contract": {"principal": 100000, "term_months": 6, "repayment_method": "equal_principal_interest"},
+  "pricing": {
+    "nominal_annual_rate": 0.18,
+    "upfront_fee_rate": 0.005,
+    "upfront_fee_fixed": 0,
+    "monthly_fee": 20,
+    "fee_financed": false,
+    "credit_enhancement_fee": {"rate": 0.01, "fixed": 0, "collection": "installment"},
+    "bundled_service": {"rate": 0, "fixed": 600, "purchase_rate": 0.30, "collection": "upfront"}
+  },
+  "risk": {
+    "mode": "vintage",
+    "mapping_profile": "balance_vintage_v1",
+    "cumulative_90_plus_rate": 0.02,
+    "lgd": 0.60,
+    "vintage": {
+      "0_plus": [0.008, 0.015, 0.023, 0.031, 0.038, 0.044, 0.041, 0.039],
+      "30_plus": [0.003, 0.006, 0.010, 0.014, 0.019, 0.024],
+      "90_plus": [0.000, 0.001, 0.003, 0.006, 0.011, 0.017]
+    }
+  },
+  "prepayment": {"mode": "curve", "overall_rate": 0.07, "curve": [0.005, 0.010, 0.015, 0.015, 0.015, 0.010]},
+  "costs": {
+    "funding_annual_rate": 0.07,
+    "acquisition_origination_cost": 500,
+    "monthly_operating_cost": 15,
+    "collection_monthly_rate_on_overdue_balance": 0.004,
+    "payment_rate_on_principal_recovered": 0.001,
+    "credit_inquiry_fixed": 5,
+    "credit_inquiry_rate_on_disbursement": 0.0001
+  },
+  "tax": {
+    "indirect_tax": {
+      "enabled": true,
+      "type": "fictional_demo_tax",
+      "rate": 0.05,
+      "base_method": "income",
+      "price_is_tax_inclusive": true,
+      "allow_negative_base": false
+    },
+    "include_income_tax_in_period_cashflow": false
+  },
+  "observation": {"post_maturity_months": 2},
+  "borrower_metrics": {"irr_annualization": "simple_times_12", "apr_method": "simple_annualized_cost"},
+  "capital": {"economic_capital_rate": 0.08},
+  "valuation": {
+    "discount_annual_rate": 0.04,
+    "benchmark_name": "虚构演示基准",
+    "benchmark_source_url": "https://example.invalid/demo-benchmark",
+    "benchmark_effective_date": "2026-11-16"
+  },
+  "lifecycle": {
+    "repeat_count": 2,
+    "repeat_principal": 80000,
+    "repeat_probability": 0.55,
+    "repeat_acquisition_cost_multiplier": 0.35
+  },
+  "decision": {
+    "metrics": [
+      {"name": "expected_gross_profit", "operator": ">=", "threshold": 0},
+      {"name": "npv", "operator": ">=", "threshold": 0},
+      {"name": "raroc", "operator": ">=", "threshold": 0.12},
+      {"name": "ltv", "operator": ">=", "threshold": 0}
+    ]
+  },
+  "compliance": {
+    "policy_snapshot": {
+      "pricing_rule": "虚构案例，不代表任何司法辖区的规则",
+      "maximum_all_in_rate": null,
+      "tax_rule": "虚构间接税，仅用于展示可配置税务计算",
+      "source_url": "",
+      "effective_date": "",
+      "verified_by": "unverified"
+    }
+  },
+  "lineage": [
+    {"path": "*", "source": "synthetic demonstration", "as_of_date": "2026-11-16", "owner": "skill-maintainer", "status": "assumed", "confidence": "low", "note": "全部数据均为虚构，仅展示功能"}
+  ],
+  "scenarios": [
+    {"name": "资金成本上升", "overrides": {"costs.funding_annual_rate": 0.10}},
+    {"name": "定价下调", "overrides": {"pricing.nominal_annual_rate": 0.15}}
+  ]
+}
