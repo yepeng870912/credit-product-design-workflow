@@ -17,8 +17,12 @@
 - `design-credit-product/references/`：输入协议、产品设计、模型和合规规则。
 - `design-credit-product/scripts/`：确定性计算引擎及回归测试。
 - `design-credit-product/assets/input-template.json`：无地区、无产品参数的输入模板。
+- `design-credit-product/assets/demo-input.json`：虚构的完整能力演示输入。
+- `design-credit-product/assets/demo-output.json`：由当前计算引擎生成的对应输出。
 
 项目输入、政策快照、模型输出和审批资料应保存在 Skill 目录之外。
+
+演示案例中的地区、政策、税率、风险及成本参数均为虚构数据，只用于帮助用户理解 Skill 能力，不得直接用于真实产品决策。
 
 ## 运行
 

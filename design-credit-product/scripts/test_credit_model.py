@@ -140,5 +140,16 @@ class CreditModelBalanceCashflowTests(unittest.TestCase):
         metric = result["borrower_metrics"]["without_bundled_product"]
         self.assertAlmostEqual(metric["annualized_irr"], (1 + metric["monthly_irr"]) ** 12 - 1)
 
+    def test_packaged_demo_is_reproducible(self):
+        with (HERE.parent / "assets" / "demo-input.json").open(encoding="utf-8") as handle:
+            demo = json.load(handle)
+        result = credit_model.run_all(demo)
+        with (HERE.parent / "assets" / "demo-output.json").open(encoding="utf-8") as handle:
+            packaged = json.load(handle)
+        self.assertEqual(result["base"]["status"], "valid")
+        self.assertEqual(len(result["scenarios"]), 2)
+        self.assertEqual(packaged, result)
+        self.assertIn("POLICY_UNVERIFIED", {x["code"] for x in result["base"]["single_loan"]["validation"]["warnings"]})
+
 
 if __name__ == "__main__": unittest.main(verbosity=2)

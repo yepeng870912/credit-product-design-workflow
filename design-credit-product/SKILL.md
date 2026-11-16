@@ -13,7 +13,7 @@ Build a decision-ready parameter package and an auditable unit-economics model. 
 - Read `references/product-design.md` for stage gates and parameter checks.
 - Read `references/financial-model.md` before calculating.
 - Read `references/regional-compliance.md` whenever region, pricing compliance, tax, or benchmark discount rates matter. Retrieve current authoritative sources and cite them; do not rely on static memory.
-- Start from `assets/input-template.json`. Create project inputs and outputs outside the skill directory.
+- Start from `assets/input-template.json`. Read `assets/demo-input.json` and `assets/demo-output.json` only when the user asks what the skill can produce or needs a worked example. The demo is synthetic, intentionally unverified for compliance, and must never supply real-project policy or parameter assumptions. Create real project inputs and outputs outside the skill directory.
 
 ## Execute
 
