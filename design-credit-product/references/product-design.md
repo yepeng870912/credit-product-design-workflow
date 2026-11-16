@@ -26,5 +26,5 @@ For every parameter record:
 - Eligibility and risk rules must use legally obtainable, operationally available fields.
 - Product text, model schedule, system configuration, contract, disclosure, and accounting treatment must use the same rate and fee definitions.
 - Optional bundled services must be separated from mandatory charges; use purchase rate for expected economics and the applicable regional rule for APR inclusion.
-- Discount rate, pricing cap, VAT base/rate, and disclosure method must have current official sources matching the region and entity/product scope.
+- Discount rate, pricing cap, applicable indirect-tax base/rate, and disclosure method must have current official sources matching the region and entity/product scope.
 - Pilot limits and stop rules must be measurable from available data.

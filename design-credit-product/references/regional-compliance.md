@@ -15,7 +15,7 @@ Return `check | applicable rule | model value | result | source | effective date
 
 ## Tax caution
 
-Do not generalize a deduction of funding cost from the VAT base. The calculation engine supports the user's requested demonstration formula, but the agent must verify whether it applies to the specific entity and transaction. If official guidance conflicts, show both and require tax review.
+Do not generalize any indirect-tax base, rate, inclusive/exclusive treatment, or deductibility rule. Configure only a method supported by current authoritative guidance and record the source. If the required regional method is unsupported, calculate it outside the engine with a documented formula or block the approval-stage conclusion.
 
 ## Freshness
 

@@ -1,37 +1,40 @@
-# 信贷产品设计工作流
+# 信贷产品设计与定价 Skill
 
-用于设计区域化信贷产品参数并构建可审计的单笔与生命周期定价模型。
+这是一个去案例化、配置驱动且可审计的 Codex Skill，用于设计区域化信贷产品参数，并构建单笔及生命周期定价模型。
 
-## 功能
+## 核心能力
 
 - 支持等额本息、等额本金、等本等息和到期还本。
-- 建模提前结清和 0+/30+/90+ Vintage 曲线。
+- 建模提前结清及 0+/30+/90+ Vintage 曲线。
 - 计算企业逐期现金流、毛利润、NPV、ROI、RAROC 和生命周期 LTV。
-- 分别计算搭售产品购买者与未购买者的借款人 IRR/APR。
+- 分别计算搭售产品实际购买者和未购买者的借款人 IRR 与配置化管理 APR。
 - 保留余额递推、公式轨迹、输入来源和自动对账结果。
-- 支持地域政策、定价限制、税务规则和市场资料登记。
+- 将地域政策、税务口径、观察期、风险映射及决策阈值保留为项目配置。
 
 ## 目录
 
-- `design-credit-product/`：Codex Skill、计算脚本、输入模板和参考资料。
-- `outputs/`：示例验证工作簿。
-- 根目录 Markdown 文件：历次模型验证与计算说明。
+- `design-credit-product/SKILL.md`：Skill 入口和工作流。
+- `design-credit-product/references/`：输入协议、产品设计、模型和合规规则。
+- `design-credit-product/scripts/`：确定性计算引擎及回归测试。
+- `design-credit-product/assets/input-template.json`：无地区、无产品参数的输入模板。
 
-## 运行示例
+项目输入、政策快照、模型输出和审批资料应保存在 Skill 目录之外。
+
+## 运行
 
 ```powershell
 python design-credit-product/scripts/credit_model.py `
-  --input design-credit-product/assets/example-input-v7.json `
-  --output example-output.json `
-  --cashflows example-cashflows.csv
+  --input C:\path\to\project-input.json `
+  --output C:\path\to\result.json `
+  --cashflows C:\path\to\cashflows.csv
 ```
 
 运行测试：
 
 ```powershell
-python -m unittest discover -s design-credit-product/scripts -p "test_*.py"
+python -m unittest discover -s design-credit-product/scripts -p "test_*.py" -v
 ```
 
-## 重要说明
+## 边界
 
-本项目是透明的产品可行性及定价测算工具，不构成法律、税务、会计或监管意见，也不替代 IFRS 9/CECL、正式资本计量或生产系统。正式使用前应由产品、风险、财务、税务、法务及合规团队审批，并使用与目标地域和主体匹配的最新官方规则及真实风险数据。
+Skill 不内置任何地区的现行监管、税务或市场结论。管理 APR 不等同于监管 APR；当前模型也不替代 IFRS 9/CECL、正式资本计量、纳税申报或生产系统。真实项目必须使用与目标地域、主体和日期匹配的权威来源，并经产品、风险、财务、税务、法务和合规团队审批。

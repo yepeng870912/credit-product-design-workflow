@@ -66,6 +66,37 @@ def numeric(value):
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
+def post_maturity_months(data):
+    return int(get(data, "observation.post_maturity_months", 0))
+
+
+def annualize_monthly_irr(monthly_rate, method):
+    if monthly_rate is None:
+        return None
+    if method == "simple_times_12":
+        return monthly_rate * 12
+    if method == "effective_compound":
+        return (1 + monthly_rate) ** 12 - 1
+    raise ValueError(f"unsupported IRR annualization method: {method}")
+
+
+def calculate_indirect_tax(income, funding_cost, config):
+    if not config.get("enabled", False):
+        return 0.0, 0.0
+    method = config.get("base_method", "income")
+    if method == "income":
+        base = income
+    elif method == "income_minus_funding_cost":
+        base = income - funding_cost
+    else:
+        raise ValueError(f"unsupported tax base method: {method}")
+    if not config.get("allow_negative_base", False):
+        base = max(0.0, base)
+    rate = config.get("rate", 0.0)
+    taxable_base = base / (1 + rate) if config.get("price_is_tax_inclusive", False) else base
+    return taxable_base, taxable_base * rate
+
+
 def validate_curve(curve, n, path, cumulative=True):
     errors = []
     if not isinstance(curve, list) or len(curve) != n:
@@ -87,7 +118,7 @@ def validate(data):
         "metadata.stage", "metadata.region.country", "metadata.region.province",
         "contract.principal", "contract.term_months", "contract.repayment_method",
         "pricing.nominal_annual_rate", "risk.mode", "risk.lgd",
-        "costs.funding_annual_rate", "tax.vat_rate", "valuation.discount_annual_rate",
+        "costs.funding_annual_rate", "valuation.discount_annual_rate",
     ]
     for path in required:
         value = get(data, path)
@@ -105,20 +136,24 @@ def validate(data):
     if not isinstance(n, int) or isinstance(n, bool) or n <= 0:
         errors.append({"code": "RANGE", "path": "contract.term_months", "message": "must be a positive integer"})
         return errors, warnings
+    tail = get(data, "observation.post_maturity_months", 0)
+    if not isinstance(tail, int) or isinstance(tail, bool) or tail < 0:
+        errors.append({"code": "RANGE", "path": "observation.post_maturity_months", "message": "must be a non-negative integer"})
+        return errors, warnings
     methods = {"annuity", "equal_principal", "equal_principal_interest", "bullet"}
     if get(data, "contract.repayment_method") not in methods:
         errors.append({"code": "ENUM", "path": "contract.repayment_method", "message": f"use one of {sorted(methods)}"})
     rate_paths = [
         "pricing.nominal_annual_rate", "risk.lgd", "costs.funding_annual_rate",
         "costs.collection_monthly_rate_on_overdue_balance", "costs.payment_rate_on_principal_recovered",
-        "costs.credit_inquiry_rate_on_disbursement", "tax.vat_rate", "capital.economic_capital_rate",
+        "costs.credit_inquiry_rate_on_disbursement", "capital.economic_capital_rate",
         "valuation.discount_annual_rate", "lifecycle.repeat_probability", "lifecycle.repeat_acquisition_cost_multiplier",
     ]
     for path in rate_paths:
         value = get(data, path, 0)
         if not numeric(value) or value < 0:
             errors.append({"code": "RANGE", "path": path, "message": "must be a non-negative decimal"})
-    for path in ["risk.lgd", "tax.vat_rate", "capital.economic_capital_rate", "lifecycle.repeat_probability", "lifecycle.repeat_acquisition_cost_multiplier"]:
+    for path in ["risk.lgd", "capital.economic_capital_rate", "lifecycle.repeat_probability", "lifecycle.repeat_acquisition_cost_multiplier"]:
         if get(data, path, 0) > 1:
             errors.append({"code": "RANGE", "path": path, "message": "must not exceed 1"})
     if get(data, "pricing.fee_financed", False):
@@ -131,9 +166,9 @@ def validate(data):
             errors.append({"code": "RANGE", "path": "risk.cumulative_90_plus_rate", "message": "required for uniform mode and must be 0..1"})
     elif risk_mode == "vintage":
         curves = get(data, "risk.vintage", {})
-        # 0+ continues for three months after contractual maturity so that
+        # 0+ continues for the configured observation tail so that
         # post-maturity recoveries can be reconciled to the balance rollforward.
-        errors += validate_curve(curves.get("0_plus"), n + 3, "risk.vintage.0_plus", cumulative=False)
+        errors += validate_curve(curves.get("0_plus"), n + tail, "risk.vintage.0_plus", cumulative=False)
         for name in ("30_plus", "90_plus"):
             errors += validate_curve(curves.get(name), n, f"risk.vintage.{name}")
         if not errors:
@@ -157,6 +192,21 @@ def validate(data):
             errors.append({"code": "CURVE_SUM", "path": "prepayment.curve", "message": "incremental curve sum must not exceed 1"})
     elif prepay_mode != "none":
         errors.append({"code": "ENUM", "path": "prepayment.mode", "message": "use none, overall, or curve"})
+
+    tax = get(data, "tax.indirect_tax", {})
+    if tax.get("enabled", False):
+        rate = tax.get("rate")
+        if not numeric(rate) or rate < 0 or rate > 1:
+            errors.append({"code": "RANGE", "path": "tax.indirect_tax.rate", "message": "enabled tax rate must be 0..1"})
+        if tax.get("base_method", "income") not in {"income", "income_minus_funding_cost"}:
+            errors.append({"code": "ENUM", "path": "tax.indirect_tax.base_method", "message": "use income or income_minus_funding_cost"})
+    irr_method = get(data, "borrower_metrics.irr_annualization", "simple_times_12")
+    if irr_method not in {"simple_times_12", "effective_compound"}:
+        errors.append({"code": "ENUM", "path": "borrower_metrics.irr_annualization", "message": "unsupported IRR annualization method"})
+    if get(data, "borrower_metrics.apr_method", "simple_annualized_cost") != "simple_annualized_cost":
+        errors.append({"code": "UNSUPPORTED", "path": "borrower_metrics.apr_method", "message": "regulatory APR requires a separately implemented regional method"})
+    if get(data, "risk.mapping_profile", "balance_vintage_v1") != "balance_vintage_v1":
+        errors.append({"code": "UNSUPPORTED", "path": "risk.mapping_profile", "message": "unsupported risk-to-cashflow mapping profile"})
 
     policy = get(data, "compliance.policy_snapshot", {})
     if not policy.get("source_url") or not policy.get("effective_date"):
@@ -214,7 +264,7 @@ def risk_curves(data):
     cdr = get(data, "risk.cumulative_90_plus_rate")
     hazard = 1 - (1 - cdr) ** (1 / n)
     curve = [1 - (1 - hazard) ** month for month in range(1, n + 1)]
-    return {"0_plus": curve + [curve[-1]] * 3, "30_plus": curve, "90_plus": curve}
+    return {"0_plus": curve + [curve[-1]] * post_maturity_months(data), "30_plus": curve, "90_plus": curve}
 
 
 def prepayment_curve(data):
@@ -230,10 +280,10 @@ def single_loan(data, acquisition_multiplier=1.0):
     errors, warnings = validate(data)
     if errors:
         return {"status": "invalid", "input_snapshot": data, "validation": {"errors": errors, "warnings": warnings}}
-    p = float(get(data, "contract.principal")); n = get(data, "contract.term_months"); horizon = n + 3
+    p = float(get(data, "contract.principal")); n = get(data, "contract.term_months"); horizon = n + post_maturity_months(data)
     schedule = contractual_schedule(data); vintage = risk_curves(data); prepay = prepayment_curve(data)
     monthly_funding = get(data, "costs.funding_annual_rate") / 12
-    vat_rate = get(data, "tax.vat_rate"); econ_rate = get(data, "capital.economic_capital_rate", 0)
+    tax_config = get(data, "tax.indirect_tax", {}); econ_rate = get(data, "capital.economic_capital_rate", 0)
     acquisition_origination = get(data, "costs.acquisition_origination_cost", 0) * acquisition_multiplier
     inquiry = get(data, "costs.credit_inquiry_fixed", 0) + p * get(data, "costs.credit_inquiry_rate_on_disbursement", 0)
     upfront_base = p * get(data, "pricing.upfront_fee_rate", 0) + get(data, "pricing.upfront_fee_fixed", 0)
@@ -257,13 +307,13 @@ def single_loan(data, acquisition_multiplier=1.0):
                 "credit_enhancement_fee": guarantee_m[i], "bundled_product_expenditure": bundle_m[i], "net_cashflow": cf})
 
     cash_keys = ["disbursement", "principal_cash_inflow", "income_cash_inflow", "acquisition_origination_cost",
-                 "credit_inquiry_cost", "funding_cost", "collection_operating_cost", "payment_cost", "vat", "net_company_cashflow"]
-    vat0 = (upfront_income / 1.06) * vat_rate
-    net0 = -p + upfront_income - acquisition_origination - inquiry - vat0
+                 "credit_inquiry_cost", "funding_cost", "collection_operating_cost", "payment_cost", "indirect_tax", "net_company_cashflow"]
+    tax_base0, tax0 = calculate_indirect_tax(upfront_income, 0.0, tax_config)
+    net0 = -p + upfront_income - acquisition_origination - inquiry - tax0
     company_cashflows = [{"month": 0, "disbursement": p, "principal_cash_inflow": 0.0,
         "income_cash_inflow": upfront_income, "acquisition_origination_cost": acquisition_origination,
         "credit_inquiry_cost": inquiry, "funding_cost": 0.0, "collection_operating_cost": 0.0,
-        "payment_cost": 0.0, "vat": vat0, "net_company_cashflow": net0}]
+        "payment_cost": 0.0, "indirect_tax": tax0, "net_company_cashflow": net0}]
     rows, lender_cf = [], [net0]
     prior_actual_ending = p; prior_cum_prepay_principal = 0.0; prior_0_rate = 0.0
     cumulative_prepay_rate = 0.0; avg_capital_sum = 0.0
@@ -301,13 +351,12 @@ def single_loan(data, acquisition_multiplier=1.0):
         operating_cost = get(data, "costs.monthly_operating_cost", 0)
         collection_operating = collection_cost + operating_cost
         payment_cost = principal_inflow * get(data, "costs.payment_rate_on_principal_recovered", 0)
-        vat_base = income_inflow - funding_cost
-        vat = vat_base / 1.06 * vat_rate
-        net_cf = principal_inflow + income_inflow - funding_cost - collection_operating - payment_cost - vat
+        tax_base, indirect_tax = calculate_indirect_tax(income_inflow, funding_cost, tax_config)
+        net_cf = principal_inflow + income_inflow - funding_cost - collection_operating - payment_cost - indirect_tax
         cash = {"month": month, "disbursement": 0.0, "principal_cash_inflow": principal_inflow,
             "income_cash_inflow": income_inflow, "acquisition_origination_cost": 0.0, "credit_inquiry_cost": 0.0,
             "funding_cost": funding_cost, "collection_operating_cost": collection_operating,
-            "payment_cost": payment_cost, "vat": vat, "net_company_cashflow": net_cf}
+            "payment_cost": payment_cost, "indirect_tax": indirect_tax, "net_company_cashflow": net_cf}
         company_cashflows.append(cash); lender_cf.append(net_cf)
         economic_capital = funding_base * econ_rate; avg_capital_sum += economic_capital
         rows.append({**base, "previous_actual_ending_principal": prior_actual_ending,
@@ -327,7 +376,7 @@ def single_loan(data, acquisition_multiplier=1.0):
             "funding_cost": funding_cost, "overdue_balance": cumulative_overdue_principal,
             "collection_cost": collection_cost, "operating_cost": operating_cost,
             "collection_operating_cost": collection_operating, "payment_cost": payment_cost,
-            "economic_capital": economic_capital, "vat_base": vat_base, "vat": vat,
+            "economic_capital": economic_capital, "indirect_tax_base": tax_base, "indirect_tax": indirect_tax,
             "company_net_cashflow": net_cf})
         prior_actual_ending = actual_ending_principal; prior_cum_prepay_principal = cumulative_prepay_principal; prior_0_rate = current_0_rate
     company_cashflow_summary = {key: {"total": sum(row[key] for row in company_cashflows),
@@ -342,14 +391,16 @@ def single_loan(data, acquisition_multiplier=1.0):
                                ("with_bundled_product", purchaser_bundle0 + sum(purchaser_bundle_m))):
         flows = borrower_profiles[name]["cashflows"]
         monthly_rate = monthly_irr(flows)
-        annual_irr = None if monthly_rate is None else monthly_rate * 12
+        irr_method = get(data, "borrower_metrics.irr_annualization", "simple_times_12")
+        annual_irr = annualize_monthly_irr(monthly_rate, irr_method)
         apr = (total_interest_cost + total_guarantee_cost + bundled_cost) / p / n * 12
         residual = None if monthly_rate is None else sum(cf / (1 + monthly_rate) ** t for t, cf in enumerate(flows))
         for item in borrower_profiles[name]["detail"]:
             item["irr_discount_factor"] = None if monthly_rate is None else (1 + monthly_rate) ** item["month"]
             item["irr_discounted_cashflow"] = None if monthly_rate is None else item["net_cashflow"] / item["irr_discount_factor"]
         borrower_metric_results[name] = {"monthly_irr": monthly_rate, "annualized_irr": annual_irr,
-            "apr": apr, "total_interest_cost": total_interest_cost,
+            "apr": apr, "apr_method": get(data, "borrower_metrics.apr_method", "simple_annualized_cost"),
+            "irr_annualization": irr_method, "total_interest_cost": total_interest_cost,
             "total_credit_enhancement_fee": total_guarantee_cost,
             "total_bundled_product_expenditure": bundled_cost,
             "total_borrowing_cost": total_interest_cost + total_guarantee_cost + bundled_cost,
@@ -364,16 +415,16 @@ def single_loan(data, acquisition_multiplier=1.0):
         {"name": "actual_principal_rollforward", "difference": p - sum(x["principal_cash_inflow"] for x in rows) - prior_actual_ending, "tolerance": 1e-8, "passed": abs(p - sum(x["principal_cash_inflow"] for x in rows) - prior_actual_ending) <= 1e-8},
         {"name": "actual_ending_principal_nonnegative", "difference": min(x["actual_ending_principal"] for x in rows), "tolerance": 1e-8, "passed": min(x["actual_ending_principal"] for x in rows) >= -1e-8},
         {"name": "gross_profit_equals_company_net_cashflow", "difference": expected_gross_profit - sum(lender_cf), "tolerance": 1e-8, "passed": abs(expected_gross_profit - sum(lender_cf)) <= 1e-8},
-        {"name": "no_income_tax", "difference": 0.0, "tolerance": 0.0, "passed": True},
+        {"name": "income_tax_matches_configuration", "difference": 0.0, "tolerance": 0.0, "passed": not get(data, "tax.include_income_tax_in_period_cashflow", False)},
         {"name": "borrower_irr_equations", "difference": max(abs(x["irr_equation_residual"]) for x in borrower_metric_results.values()), "tolerance": 1e-8, "passed": all(x["irr_equation_residual"] is not None and abs(x["irr_equation_residual"]) <= 1e-8 for x in borrower_metric_results.values())},
         {"name": "borrower_apr_formulas", "difference": 0.0, "tolerance": 1e-12, "passed": True},
         {"name": "company_cashflow_identity", "difference": sum(x["net_company_cashflow"] for x in company_cashflows) - sum(lender_cf), "tolerance": 1e-8, "passed": abs(sum(x["net_company_cashflow"] for x in company_cashflows) - sum(lender_cf)) <= 1e-8},
     ]
     traces = [
         {"id": "F01", "formula": "monthly_rate=nominal_annual_rate/12", "substitution": f"{get(data, 'pricing.nominal_annual_rate')}/12", "result": get(data, "pricing.nominal_annual_rate") / 12},
-        {"id": "F02", "formula": "net_company_cashflow=-disbursement+principal_cash_inflow+income_cash_inflow-acquisition_origination-credit_inquiry-funding-collection_operating-payment-VAT", "substitution": "see company_cashflows and company_cashflow_summary", "result": expected_gross_profit},
-        {"id": "F03", "formula": "VAT=(income_cash_inflow-funding_cost)/1.06*VAT_rate", "substitution": f"vat_rate={vat_rate}; calculated by period", "result": company_cashflow_summary["vat"]["total"]},
-        {"id": "F04", "formula": "solve monthly r where sum(borrower_cashflow_t/(1+r)^t)=0; annual_IRR=monthly_IRR*12", "substitution": "see borrower_metrics for both populations", "result": {k: v["annualized_irr"] for k, v in borrower_metric_results.items()}},
+        {"id": "F02", "formula": "net_company_cashflow=-disbursement+principal_cash_inflow+income_cash_inflow-costs-indirect_tax", "substitution": "see company_cashflows and company_cashflow_summary", "result": expected_gross_profit},
+        {"id": "F03", "formula": "indirect_tax=configured_taxable_base*configured_rate", "substitution": f"config={tax_config}; calculated by period", "result": company_cashflow_summary["indirect_tax"]["total"]},
+        {"id": "F04", "formula": "solve monthly r where sum(borrower_cashflow_t/(1+r)^t)=0; annualize with configured method", "substitution": f"method={get(data, 'borrower_metrics.irr_annualization', 'simple_times_12')}", "result": {k: v["annualized_irr"] for k, v in borrower_metric_results.items()}},
         {"id": "F04A", "formula": "APR=(interest+credit_enhancement_fee+actual_bundled_expenditure)/principal/term_months*12", "substitution": "see borrower_metrics for both populations", "result": {k: v["apr"] for k, v in borrower_metric_results.items()}},
         {"id": "F04B", "formula": "income_cash_inflow_t=interest_bearing_principal_t/previous_planned_ending_principal_t*planned_interest_and_fees_t", "substitution": "calculated by period", "result": company_cashflow_summary["income_cash_inflow"]["total"]},
         {"id": "F04C", "formula": "funding_cost_t=(interest_bearing_principal_t+new_0_plus_overdue_principal_t)*funding_annual_rate/12", "substitution": "prepaid principal excluded; newly overdue principal remains funded because the company compensates overdue interest", "result": company_cashflow_summary["funding_cost"]["total"]},
@@ -389,7 +440,7 @@ def single_loan(data, acquisition_multiplier=1.0):
         {"name": "apr_without_bundled_product_within_supplied_cap", "value": borrower_metric_results["without_bundled_product"]["apr"], "threshold": cap, "passed": None if cap is None else borrower_metric_results["without_bundled_product"]["apr"] <= cap, "source": policy.get("source_url")},
         {"name": "apr_with_bundled_product_within_supplied_cap", "value": borrower_metric_results["with_bundled_product"]["apr"], "threshold": cap, "passed": None if cap is None else borrower_metric_results["with_bundled_product"]["apr"] <= cap, "source": policy.get("source_url")},
         {"name": "discount_benchmark_sourced", "value": get(data, "valuation.benchmark_name"), "passed": bool(get(data, "valuation.benchmark_source_url")) and bool(get(data, "valuation.benchmark_effective_date")), "source": get(data, "valuation.benchmark_source_url")},
-        {"name": "income_tax_excluded", "value": get(data, "tax.income_tax_in_period_cashflow", False), "passed": not get(data, "tax.income_tax_in_period_cashflow", False), "source": "model convention"},
+        {"name": "income_tax_scope_supported", "value": get(data, "tax.include_income_tax_in_period_cashflow", False), "passed": not get(data, "tax.include_income_tax_in_period_cashflow", False), "source": "configured model scope"},
     ]
     return {"status": "valid" if all(x["passed"] for x in checks) else "reconciliation_failed",
             "input_snapshot": data, "borrower_metrics": borrower_metric_results,
@@ -430,7 +481,7 @@ def lifecycle(data, first):
             month = cycle * n + row["month"]
             timeline[month] = timeline.get(month, 0.0) + row["net_company_cashflow"] * weight
     running, monthly = 0.0, []
-    for month in range(0, (repeat_count + 1) * n + 4):
+    for month in range(0, (repeat_count + 1) * n + post_maturity_months(data) + 1):
         profit = timeline.get(month, 0.0); running += profit
         monthly.append({"lifecycle_month": month, "expected_gross_profit": profit, "cumulative_ltv": running})
     return {"repeat_count": repeat_count, "cycles": cycles, "monthly_timeline": monthly, "ltv": running}

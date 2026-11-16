@@ -1,9 +1,9 @@
-# Financial model V4
+# Financial model
 
 ## Contract and observation horizons
 
 - Origination is month 0. The contractual schedule runs for `n` months.
-- The actual company balance and cash-flow schedule runs through `n+3` so post-maturity collections are visible.
+- The actual company balance and cash-flow schedule runs through `n + observation.post_maturity_months` so post-maturity collections are visible.
 - Supported repayment methods are annuity, equal principal, equal principal and interest (等本等息), and bullet. In every method, contractual final principal equals the remaining contractual balance.
 
 ## Balance rollforward
@@ -22,7 +22,7 @@ All behavioral curves are by original disbursement `P`. For month `t`:
 - principal cash inflow = `current prepayment principal + actual normal principal + actual post-maturity recovery`
 - income cash inflow = `interest-bearing principal / previous planned ending principal * planned interest and fees`, during the contractual term only
 
-The 0+ curve must contain `n+3` observations. The first `n` observations are non-decreasing; the last three can decline to represent post-maturity recovery. Uniform-risk mode carries the terminal 0+ value forward for three periods and therefore assumes no post-maturity recovery unless an explicit Vintage curve is supplied.
+The 0+ curve must cover the complete configured horizon. The first `n` observations are non-decreasing; tail observations can decline to represent post-maturity recovery. Uniform-risk mode carries the terminal 0+ value through the configured tail and therefore assumes no post-maturity recovery unless an explicit Vintage curve is supplied.
 
 ## Costs, tax, and company cash flow
 
@@ -30,18 +30,18 @@ The 0+ curve must contain `n+3` observations. The first `n` observations are non
 - collection cost = `cumulative 0+ overdue principal * monthly collection rate`
 - collection-operating cost = collection cost + monthly operating cost
 - payment cost = `principal cash inflow * payment cost rate`
-- VAT = `(income cash inflow - funding cost) / 1.06 * VAT rate`
-- company net cash flow = `-disbursement + principal cash inflow + income cash inflow - acquisition-origination cost - credit inquiry cost - funding cost - collection-operating cost - payment cost - VAT`
+- indirect tax = the configured taxable base, inclusive/exclusive treatment, rate, and negative-base rule
+- company net cash flow = `-disbursement + principal cash inflow + income cash inflow - acquisition-origination cost - credit inquiry cost - funding cost - collection-operating cost - payment cost - indirect tax`
 
-Month 0 contains disbursement, upfront income, acquisition-origination cost, credit inquiry cost, and associated VAT. Output exactly the ten company cash fields above, plus month. For every field output the lifecycle total and total/original-disbursement ratio.
+Month 0 contains disbursement, upfront income, acquisition-origination cost, credit inquiry cost, and any configured indirect tax. The core report contains the ten standard company cash fields above, plus month, and may preserve additional project-specific fields. For every value field output the lifecycle total and total/original-disbursement ratio.
 
-Single-loan gross profit is the total company net cash flow through `n+3`. Do not deduct expected principal loss again: non-recovered principal is already absent from principal cash inflow. Economic capital is excluded from gross profit and used only in the RAROC denominator. Income tax is excluded from period cash flow.
+Single-loan gross profit is total company net cash flow through the configured observation horizon. Do not deduct expected principal loss again: non-recovered principal is already absent from principal cash inflow. Economic capital is excluded from gross profit and used only in the RAROC denominator. Income tax is outside the bundled engine's scope.
 
 ## Borrower metrics
 
 - Build borrower cash flows from principal received at month 0 and scheduled principal, interest, credit-enhancement fees, and actual bundled-product expenditure paid in each period.
-- Solve monthly IRR and annualize without compounding: `annual IRR = monthly IRR * 12`.
-- APR = `(interest + credit-enhancement fee + actual bundled-product expenditure) / principal / term months * 12`.
+- Solve monthly IRR and annualize with the configured method: `simple_times_12` or `effective_compound`.
+- The bundled `simple_annualized_cost` APR method is `(interest + credit-enhancement fee + actual bundled-product expenditure) / principal / term months * 12`; it is not a substitute for a region-specific regulatory APR.
 - Output only actual bundled-product purchasers and non-purchasers. Purchase rate is used only for company expected income.
 
 ## Valuation and lifecycle
@@ -59,4 +59,4 @@ Single-loan gross profit is the total company net cash flow through `n+3`. Do no
 - Borrower IRR equations have zero residual; APR uses its separate simple formula.
 - Income tax in period cash flow is zero.
 
-This is a transparent feasibility model, not an IFRS 9/CECL, regulatory-capital, tax-filing, regulatory-APR, or production behavioral model.
+This is a transparent feasibility model, not an IFRS 9/CECL, regulatory-capital, tax-filing, regulatory-APR, or production behavioral model. Every project must record its selected observation, tax, borrower-metric, and risk-mapping configuration.
